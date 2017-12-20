@@ -1,0 +1,82 @@
+package manager;
+
+import entities.NewsCate;
+import entities.NewsDetail;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import model.NewsCateFacade;
+import model.NewsDetailFacade;
+
+@ManagedBean(name = "userNewsManaged")
+@SessionScoped
+public class NewsManaged {
+    @EJB
+    private NewsDetailFacade newsDetailFacade;
+    @EJB
+    private NewsCateFacade newsCateFacade;
+    
+    private NewsCate newsCate;
+    private NewsDetail newsDetail;
+
+    public NewsManaged() {
+    }
+
+    public NewsCate getNewsCate() {
+        return newsCate;
+    }
+
+    public void setNewsCate(NewsCate newsCate) {
+        this.newsCate = newsCate;
+    }
+
+    public NewsDetail getNewsDetail() {
+        return newsDetail;
+    }
+
+    public void setNewsDetail(NewsDetail newsDetail) {
+        this.newsDetail = newsDetail;
+    }
+
+    public String showNewsCate() {
+        int id;
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        try {
+            id = Integer.parseInt(params.get("newsCateID"));
+        } catch (NumberFormatException e) {
+            return "404";
+        }
+
+        if (id <= 0) {
+            return "index";
+        } else {
+            newsCate = newsCateFacade.find(id);
+            return "NewsCate";
+        }
+    }
+    
+    public String showDetail() {
+        int id;
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        try {
+            id = Integer.parseInt(params.get("newsDetailID"));
+        } catch (NumberFormatException e) {
+            return "404";
+        }
+
+        if (id <= 0) {
+            return "index";
+        } else {
+            newsDetail = newsDetailFacade.find(id);
+            return "NewsDetail";
+        }
+    }
+    
+    public List<NewsDetail> findAll(){
+        return newsDetailFacade.findAll();
+    }
+
+}

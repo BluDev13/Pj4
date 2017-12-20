@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      >
+    <h:head>
+        <title>Order In Month</title>
+        <script src="../../resources/js/jquery-1.12.1.min.js" type="text/javascript"></script>
+        <link href="../../resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <script src="../../resources/javascript/Chart.bundle.js" type="text/javascript"></script>
+        <script src="../../resources/js/utils.js" type="text/javascript"></script>
+        <script src="../../resources/js/year-select.js" type="text/javascript"></script>
+        <style>
+            
+            canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        </style>
+       
+    </h:head>
+    <h:body>
+        <br/>
+        <br/>
+        <h:form>
+        <table>
+            <tr>
+                <td width="65%" align="right">Select Year : </td>
+                <td><h:inputText class="yearselect sample form-control" id="sample" value="#{systemManaged.year}"></h:inputText></td>
+                <td><h:commandButton class="btn btn-success" value="OK" action="#{systemManaged.BackCate()}" /></td>
+            </tr>
+        </table>
+         </h:form>
+            
+            
+        
+        
+        
+        <script type="text/javascript">
+            $(document).ready(function(e) {
+                $('.yearselect').yearselect();
+
+                $('.yrselectdesc').yearselect({step: 5, order: 'desc'});
+                $('.yrselectasc').yearselect({order: 'asc'});
+            });
+        </script>
+        <div id="canvas-holder" style="width:40%">
+        <canvas id="chart-area" ></canvas>
+    </div>
+    
+    <script>
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+
+    var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    #{systemManaged.ReportCategory(1)},
+                    #{systemManaged.ReportCategory(2)},
+                    #{systemManaged.ReportCategory(4)},
+                    #{systemManaged.ReportCategory(39)}
+                    
+
+                ],
+                backgroundColor: [
+                    window.chartColors.red,
+                    window.chartColors.yellow,
+                    window.chartColors.green,
+                    window.chartColors.blue
+                    
+                ],
+                label: 'Category Report'
+            }],
+            labels: [
+                "Shoes",
+                "Clothing",
+                "Accessories",
+                "Hand Bag and Watch"
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myPie = new Chart(ctx, config);
+    };
+
+    
+
+    
+
+    
+    </script>
+    </h:body>
+</html>
+

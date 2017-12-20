@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-search"></span>
+                                        <span class="text">Đăng xuất</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <div class="page-header">
+                            <h1>Chi tiết</h1>
+                        </div>  
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="head clearfix">
+                                    <div class="isw-documents"></div>
+                                    <h1>Chi tiết Hoá Đơn #100000000#{orderAdminManaged.order.orderID}</h1>
+                                </div>
+                                <div class="block-fluid">
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Hoá đơn ID : </div>
+                                        <div class="span9">
+                                            #100000000#{orderAdminManaged.order.orderID}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Khách hàng : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.customerID.customerName}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Ngày đặt : </div>
+                                        <div class="span9">
+                                            <h:outputText value="#{orderAdminManaged.order.orderDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </div>
+                                    </div>
+                                    <c:choose>
+                                        <c:when test="#{(empty orderAdminManaged.order.orderName) and (empty orderAdminManaged.order.orderAddress) and (empty orderAdminManaged.order.orderMobile)}">
+                                            <div class="row-form clearfix">
+                                                <div class="span3">Credit Card ID : </div>
+                                                <div class="span9">
+                                                    <h:outputText value="#{orderAdminManaged.order.customerID.cardID}" />
+                                                </div>
+                                            </div>
+                                            <div class="row-form clearfix">
+                                                <div class="span3">Card Expiry : </div>
+                                                <div class="span9">
+                                                    <h:outputText value="#{orderAdminManaged.order.customerID.cardExpiry}">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                    </h:outputText>
+                                                </div>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="row-form clearfix">
+                                                <div class="span3">Người nhận : </div>
+                                                <div class="span9">
+                                                    <h:outputText value="#{orderAdminManaged.order.orderName}" />
+                                                </div>
+                                            </div>
+                                            <div class="row-form clearfix">
+                                                <div class="span3">Số điện thoại : </div>
+                                                <div class="span9">
+                                                    #{orderAdminManaged.order.orderMobile}
+                                                </div>
+                                            </div>
+                                            <div class="row-form clearfix">
+                                                <div class="span3">Địa chỉ : </div>
+                                                <div class="span9">
+                                                    #{orderAdminManaged.order.orderAddress}
+                                                </div>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Sản phẩm đặt mua : </div>
+                                        <div class="span9">
+                                        </div>
+                                    </div>
+
+
+                                    <c:set var="total" value="0" />
+                                    <c:forEach items="#{orderAdminManaged.order.orderDetailsCollection}" var="detail">
+                                        <div class="row-form clearfix">
+                                            <div class="span3"></div>
+                                            <div class="span9">
+                                                <div class="span3">
+                                                    Sản phẩm : #{detail.productID.productName}
+                                                </div>
+                                                <div class="span3">Giá :  
+                                                    <h:outputText value="#{detail.productID.productPrice}">
+                                                        <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                    </h:outputText>
+                                                </div>
+                                                <div class="span3">
+                                                    Số lượng : #{detail.quantity}
+                                                </div>
+                                                <div class="span3">Tổng tiền : 
+                                                    <h:outputText value="#{detail.productID.productPrice * detail.quantity}">
+                                                        <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                    </h:outputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <c:set var="total" value="#{total + detail.productID.productPrice * detail.quantity}" />
+                                    </c:forEach>
+                                    <div class="row-form clearfix">
+                                        <div class="span3"></div>
+                                        <div class="span9">
+                                            <div class="span3">
+                                            </div>
+                                            <div class="span3"> 
+                                            </div>
+                                            <div class="span3">
+                                            </div>
+                                            <div class="span3">
+                                                Tổng tiền : <h:outputText value="#{total}">
+                                                    <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                </h:outputText>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer tar">
+                                        <h:form>
+                                            <h:commandButton value="Đã thanh toán" class="btn" action="#{orderAdminManaged.thanhtoan(orderAdminManaged.order.orderStatus)}" rendered="#{orderAdminManaged.order.orderStatus == false}" />
+                                            <h:commandButton value="Huỷ thanh toán" class="btn" action="#{orderAdminManaged.thanhtoan(orderAdminManaged.order.orderStatus)}" rendered="#{orderAdminManaged.order.orderStatus == true}" />
+                                        </h:form>
+                                    </div>
+                                </div>
+                                <div class="dr">
+                                    <span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

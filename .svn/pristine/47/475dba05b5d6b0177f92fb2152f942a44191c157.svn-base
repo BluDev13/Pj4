@@ -1,0 +1,5 @@
+javax.faces.validator.LengthValidator.MAXIMUM=Do not enter more than ''{0}'' characters
+javax.faces.validator.LengthValidator.MINIMUM=Please enter more than ''{0}'' characters
+javax.faces.validator.RegexValidator.NOT_MATCHED=Incorrect format
+javax.faces.converter.DateTimeConverter.DATE={2}: ''{0}'' could not be understood as a date.
+javax.faces.converter.DateTimeConverter.DATE_detail=Invalid date format.

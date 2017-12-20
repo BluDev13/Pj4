@@ -1,0 +1,53 @@
+package model;
+
+import entities.Customers;
+import entities.Orders;
+import java.util.List;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Root;
+import manager.SessionManaged;
+
+@Stateless
+public class OrdersFacade extends AbstractFacade<Orders> {
+    @PersistenceContext(unitName = "Project_Team4PU")
+    private EntityManager em;
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    public OrdersFacade() {
+        super(Orders.class);
+    }
+
+    public int createOrders(Orders entity) {
+        if (!constraintValidationsDetected(entity)) {
+            getEntityManager().persist(entity);
+            getEntityManager().flush();
+            getEntityManager().refresh(entity);
+        }
+        return entity.getOrderID();
+    }
+    
+    public List<Orders> getListByUserID(Customers id) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();
+        Root c = cq.from(Orders.class);
+        cq.select(c);
+        cq.where(cb.equal(c.get("customerID"), id)
+        );
+        Query q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+    
+    @PreDestroy
+    public void destroy() {
+        em.close();
+    }
+}

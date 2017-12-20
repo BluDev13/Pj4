@@ -1,0 +1,47 @@
+package manager;
+
+import entities.NewsCate;
+import java.util.Map;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import model.NewsCateFacade;
+
+@ManagedBean(name = "userNewsManaged")
+@RequestScoped
+public class NewsManaged {
+
+    @EJB
+    private NewsCateFacade newsCateFacade;
+    private NewsCate newsCate;
+
+    public NewsManaged() {
+    }
+
+    public NewsCate getNewsCate() {
+        return newsCate;
+    }
+
+    public void setNewsCate(NewsCate newsCate) {
+        this.newsCate = newsCate;
+    }
+
+    public String showNewsCate() {
+        int id;
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        try {
+            id = Integer.parseInt(params.get("newsCateID"));
+        } catch (NumberFormatException e) {
+            return "404";
+        }
+
+        if (id <= 0) {
+            return "index";
+        } else {
+            newsCate = newsCateFacade.find(id);
+            return "NewsCate";
+        }
+    }
+
+}

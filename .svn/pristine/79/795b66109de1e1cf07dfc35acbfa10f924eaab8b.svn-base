@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:if test="#{not empty session.getAttribute('username')}">
+                    #{facesContext.externalContext.redirect("index.xhtml")}
+                </c:if>
+                <div id="maincontainer">
+                    <div class="container">
+                        <div id="login">
+                            <h1 class="headingmain"><span>Đăng ký tài khoản</span></h1>
+                            <f:view>
+                                <h:form>
+                                    <section class="returncustomer">
+                                        <h2 class="heading2">Chào mừng bạn đến với Super Market Team 4 </h2>
+                                        <div class="loginbox">
+                                            <h4 class="heading4">Bạn chưa có tài khoản? vui lòng đăng ký</h4>
+                                            <c:if test="#{not empty message}">
+                                                <div class="errors">
+                                                    <ul>
+                                                        <li>#{message}</li>
+                                                    </ul>
+                                                </div>
+                                            </c:if>
+                                            <div class="form-vertical">
+                                                <fieldset>
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Tên đăng nhập :</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="username" value="#{customerManaged.customer.username}" class="span3 input-full" required="true" requiredMessage="Tên đăng nhập không được bỏ trống">
+                                                                <f:validateLength minimum="3" maximum="30" />
+                                                            </h:inputText><br />
+                                                            <h:message for="username" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Mật khẩu:</label>
+                                                        <div class="controls">
+                                                            <h:inputSecret id="password" value="#{customerManaged.customer.password}" class="span3 input-full" required="true" requiredMessage="Mật khẩu không được bỏ trống">
+                                                                <f:validateLength minimum="3" maximum="30" />
+                                                            </h:inputSecret><br />
+                                                            <h:message for="password" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Họ và Tên:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="name" value="#{customerManaged.customer.customerName}" class="span3 input-full" required="true" requiredMessage="Họ và Tên không được bỏ trống">
+                                                                <f:validateLength minimum="3" maximum="60" />
+                                                            </h:inputText><br />
+                                                            <h:message for="name" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Email:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="email" value="#{customerManaged.customer.customerEmail}" class="span3 input-full" required="true" requiredMessage="Email không được bỏ trống">
+                                                                <f:validateLength minimum="3" maximum="100" />
+                                                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                            </h:inputText><br />
+                                                            <h:message for="email" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Địa chỉ:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="address" value="#{customerManaged.customer.customerAddress}" class="span3 input-full" required="true" requiredMessage="Địa chỉ không được bỏ trống">
+                                                                <f:validateLength minimum="3" maximum="200" />
+                                                            </h:inputText><br />
+                                                            <h:message for="address" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Credit Card ID:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="cardID" value="#{customerManaged.customer.cardID}" class="span3 input-full" required="true" requiredMessage="Credit Card ID không được bỏ trống">
+                                                                <f:validateLength minimum="16" maximum="16" />
+                                                                <f:validateRegex pattern="[0-9]{16}" />
+                                                            </h:inputText><br />
+                                                            <h:message for="cardID" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Card Expiry:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="cardExpiry" value="#{customerManaged.customer.cardExpiry}" class="span3 input-full" required="true" requiredMessage="Card Expiry không được bỏ trống">
+                                                                <f:convertDateTime pattern="dd/MM/yyyy"/>  
+                                                            </h:inputText><br />
+                                                            <h:message for="cardExpiry" />
+                                                        </div>
+                                                    </div>
+                                                    <h:commandButton class="btn btn-success" value="Đăng ký" action="#{customerManaged.register()}" /> hoặc <a href="DangNhap.xhtml">Đăng nhập</a>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </h:form>
+                            </f:view>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

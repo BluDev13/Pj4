@@ -1,0 +1,172 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <f:view>
+            <ui:composition template="/template/myTemplate.xhtml">
+                <ui:define name="content">
+                    <c:set var='product' value='#{productManaged.product}' />
+                    <c:choose> 
+                        <c:when test="${empty product}">
+                            #{facesContext.externalContext.redirect("404.xhtml")}
+                        </c:when>
+                        <c:otherwise>
+                            <div id="maincontainer">
+                                <section id="product">
+                                    <div class="container">
+                                        <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+                                            <a href="/" title="general.breadcrumbs.home_link_title">Home</a>
+                                            <span class="divider">/</span>
+                                            <a href="ChuyenMuc.xhtml?id=#{product.categoryID.categoryID}" title="">#{product.categoryID.categoryName}</a>
+                                            <span class="divider">/</span>
+                                            <span class="active">#{product.productName}</span>
+                                        </nav>
+                                        <br />
+                                        <div class="row">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="span5">
+                                                        <ul class="thumbnails mainimage">
+                                                            <li class="span5">
+                                                                 <img src="#{imagesPath}/#{product.thumbImage}"/>
+                                                            </li>
+                                                        </ul>
+                                                        <ul class="thumbnails mainimage">
+                                                            <li class="producthtumb">
+                                                                <a class="thumbnail" href="#">
+                                                                    <img data-image="#{imagesPath}/#{product.thumbImage}" src="#{imagesPath}/#{product.thumbImage}" />
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="span7">
+                                                        <div class="row">
+                                                            <div class="span7">
+                                                                <h1 class="productname"><span class="bgnone">#{product.productName}</span></h1>
+                                                                <div class="productprice">
+                                                                    <div class="prnewprice">
+                                                                        <h:outputText value="#{product.productPrice}">
+                                                                            <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                        </h:outputText>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="quantitybox">
+                                                                    <div id="product-variants">
+                                                                        <div class="">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="cartsection">
+                                                                        <h:form>
+                                                                            <h:commandButton class="btn addtocart theme btn btn-success pull-left" value="Add to cart" disabled="true" rendered="#{empty session.getAttribute('username')}" />
+                                                                        </h:form>
+                                                                        <h:form>
+                                                                            <h:commandButton  value="Add to cart" class="btn addtocart theme btn btn-success pull-left" rendered="#{not empty session.getAttribute('username')}"  action="#{cartManaged.addCart(product)}" >
+                                                                            </h:commandButton>
+                                                                        </h:form>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="productdesc">
+                                                                    <ul class="nav nav-tabs" id="myTab">
+                                                                        <li class="active"><a href="#description">Detail</a>
+                                                                        </li>
+                                                                        <li><a href="#review">Comment</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="tab-content">
+                                                                        <div class="tab-pane active" id="description">
+                                                                            <h2>#{product.productDetails}
+                                                                                <c:if test="#{empty product.productDetails}">
+                                                                                    No description for this product
+                                                                                </c:if>
+                                                                            </h2>
+                                                                        </div>
+                                                                        <div class="tab-pane" id="review">
+                                                                            <ul class="reveiw">
+                                                                                <h3>Comment</h3>
+                                                                                <c:forEach items="#{commentManaged.getList(product.productID)}" var="row">
+                                                                                    <li>
+                                                                                        <b style="color: red;">#{row.customerID.customerName}</b> - 
+                                                                                        #{row.commentDetails}
+                                                                                    </li>
+                                                                                </c:forEach>
+                                                                                <c:if test="#{not empty session.getAttribute('username')}">
+                                                                                    <h:form>
+                                                                                        <h:inputTextarea value="#{commentManaged.comment.commentDetails}" /><br />
+                                                                                        <h:commandButton value="Send" class="btn addtocart theme btn btn-success pull-left" action="#{commentManaged.addComment(session.getAttribute('username'), product)}" />
+                                                                                    </h:form>
+                                                                                </c:if>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section id="related">
+                                    <div class="container">
+                                        <h1 class="headingfull"><span>Related Products</span></h1>
+                                        <aside class="grid">
+                                            <div class="grid__item">
+                                                <div class="grid-uniform">
+                                                    <c:forEach items="#{productManaged.getRelatedList(product.categoryID.categoryID)}" var="newList">
+                                                        <li class="span3">
+                                                            <a class="prdocutname" href="ViewProduct.xhtml?id=#{newList.productID}">#{newList.productName}</a>
+                                                            <div class="thumbnail">
+                                                                <span class="sale tooltip-test" data-original-title="">Hot</span>
+                                                                <h:form>
+                                                                    <h:commandLink action="#{productManaged.showProduct()}">
+                                                                        <f:param name="productID" value="#{newList.productID}" />
+                                                                        <img src="#{imagesPath}/#{newList.thumbImage}" style="width: 250px; height: 314px;" />
+                                                                    </h:commandLink>
+                                                                </h:form>
+                                                                <div class="caption">
+                                                                    <div class="price pull-left">
+                                                                        <span class="newprice">
+                                                                            <h:outputText value="#{newList.productPrice}">
+                                                                                <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                            </h:outputText>
+                                                                        </span>
+                                                                        <span class="newprice" style="color: #999; background-color: white; font-size: 14px">
+                                                                            #{newList.quantity} product available
+                                                                        </span>
+                                                                    </div>
+                                                                    <h:form>
+                                                                        <c:if test="#{empty session.getAttribute('username')}">
+                                                                            <span class="cartadd addtocart pull-right tooltip-test" style="border:0;" />
+                                                                        </c:if>
+                                                                        <c:if test="#{not empty session.getAttribute('username')}">
+                                                                            <h:commandButton class="cartadd addtocart pull-right tooltip-test" style="border:0;" action="#{cartManaged.addCart(newList)}">
+                                                                            </h:commandButton>
+                                                                        </c:if>
+                                                                    </h:form>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </aside>
+                                    </div>
+                                </section>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </ui:define>
+            </ui:composition>
+        </f:view>
+    </h:body>
+</html>
+

@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-search"></span>
+                                        <span class="text">Đăng xuất</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <div class="page-header">
+                            <h1>Sửa thông tin</h1>
+                        </div>  
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="head clearfix">
+                                    <div class="isw-documents"></div>
+                                    <h1>Sửa thông tin sản phẩm</h1>
+                                </div>
+                                <div class="block-fluid">
+                                    <h:form enctype="multipart/form-data">  
+                                        <div class="row-form clearfix">
+                                            <div class="span3">ID sản phẩm:</div>
+                                            <div class="span9">
+                                                <input type="text" value="#{productAdminManaged.product.productID}" disabled="true" />
+                                                <h:inputText value="#{productAdminManaged.product.productID}" style="display: none;">
+                                                </h:inputText>
+                                                <h:inputText value="#{productAdminManaged.product.orderCount}" style="display: none;">
+                                                </h:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Tên sản phẩm:</div>
+                                            <div class="span9">
+                                                <h:inputText id="name" value="#{productAdminManaged.product.productName}" required="true" requiredMessage="Tên sản phẩm không thể bỏ trống">
+                                                    <f:validateLength minimum="3" maximum="100" />
+                                                </h:inputText>
+                                                <h:messages for="name" />
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Danh mục:</div>
+                                            <div class="span9">
+                                                <h:selectOneMenu id="categoryID" value="#{productAdminManaged.product.categoryID}" required="true" requiredMessage="Vui lòng chọn danh mục">
+                                                    <f:selectItems value="#{productAdminManaged.categoryItems}"/>
+                                                </h:selectOneMenu>
+                                                <h:messages for="categoryID" />
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Nhãn hiệu:</div>
+                                            <div class="span9">
+                                                <h:selectOneMenu id="brandID" value="#{productAdminManaged.product.brandID}" required="true" requiredMessage="Vui lòng chọn nhãn hiệu">
+                                                    <f:selectItems value="#{productAdminManaged.brandItems}"/>
+                                                </h:selectOneMenu>
+                                                <h:messages for="brandID" />
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Giá:</div>
+                                            <div class="span9">
+                                                <h:inputText id="price" value="#{productAdminManaged.product.productPrice}" required="true" requiredMessage="Vui lòng nhập giá">
+                                                    <f:validateLongRange minimum="10000" maximum="10000000" />
+                                                    <f:convertNumber />
+                                                </h:inputText>
+                                                <h:messages for="price" />
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Số lượng:</div>
+                                            <div class="span9">
+                                                <h:inputText id="quantity" value="#{productAdminManaged.product.quantity}" required="true" requiredMessage="Vui lòng nhập số lượng" >
+                                                    <f:validateLongRange minimum="1" maximum="1000" />
+                                                    <f:convertNumber />
+                                                </h:inputText>
+                                                <h:messages for="quantity" />
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Chi tiết sản phẩm:</div>
+                                            <div class="span9">
+                                                <h:inputTextarea id="detail" value="#{productAdminManaged.product.productDetails}" required="true" requiredMessage="Vui lòng nhập chi tiết">
+                                                    <f:validateLength minimum="10" />
+                                                </h:inputTextarea>
+                                                <h:messages for="detail" />
+                                            </div>
+                                        </div>
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Hình ảnh:</div>
+                                            <div class="span9">
+                                                <h:inputFile id="image" value="#{productAdminManaged.file}" validator="#{productAdminManaged.validateFile}" required="true" requiredMessage="Vui lòng chọn hình ảnh" />
+                                                <h:messages for="image" />
+                                            </div>
+                                        </div>
+                                        <div class="footer tar">
+                                            <h:commandButton value="Sửa" class="btn" action="#{productAdminManaged.updateSanPham()}" />
+                                        </div>
+                                    </h:form>
+                                </div>
+                                <div class="dr">
+                                    <span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,105 @@
+package manager;
+
+import entities.Category;
+import entities.Products;
+import java.io.Serializable;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import model.CategoryFacade;
+
+@ManagedBean
+@SessionScoped
+public class SearchCategoryManaged implements Serializable {
+
+    @EJB
+    private CategoryFacade categoryFacade;
+    private String name;
+    private int from;
+    private int to;
+    private List<Products> list;
+    private Category category;
+
+    public SearchCategoryManaged() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getFrom() {
+        return from;
+    }
+
+    public void setFrom(int from) {
+        this.from = from;
+    }
+
+    public int getTo() {
+        return to;
+    }
+
+    public void setTo(int to) {
+        this.to = to;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<Products> getList() {
+        return list;
+    }
+
+    public void setList(List<Products> list) {
+        this.list = list;
+    }
+
+    public String search(int category) {
+        String sql = "SELECT a FROM Products a WHERE ";
+        Category cate = categoryFacade.find(category);
+        if (cate == null) {
+            SessionManaged.getRequest().setAttribute("message", "Can not found category");
+            return "";
+        }
+
+        if (from != 0 && to != 0) {
+            if (from > to) {
+                SessionManaged.getRequest().setAttribute("message", "Price From must be less than Price To");
+                return "";
+            }
+        }
+        if (from != 0 && to == 0 || from == 0 && to != 0) {
+            SessionManaged.getRequest().setAttribute("message", "Price From and Price To can not be empty");
+            return "";
+        }
+        
+        if(cate.getCategorySub() == null){
+            sql += " a.categoryID.categoryID IN (SELECT b.categoryID FROM Category b WHERE b.categorySub = :category)";
+        } else {
+            sql += " a.categoryID.categoryID = :category";
+        }
+        
+        sql += " AND a.productName LIKE :name";
+        
+        if(from != 0 && to != 0){
+            sql += " AND a.productPrice >= :from AND a.productPrice <= :to";
+        }
+        list = categoryFacade.searchCategory(sql, category, name, from, to);
+        name = "";
+        from = 0;
+        to = 0;
+        this.category = cate;
+        return "SearchCategory";
+    }
+
+}

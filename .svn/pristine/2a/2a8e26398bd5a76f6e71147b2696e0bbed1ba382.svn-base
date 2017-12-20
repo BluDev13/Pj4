@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-search"></span>
+                                        <span class="text">Đăng xuất</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <div class="page-header">
+                            <h1>Chi tiết</h1>
+                        </div>  
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="head clearfix">
+                                    <div class="isw-documents"></div>
+                                    <h1>Chi tiết Nhãn hiệu</h1>
+                                </div>
+                                <div class="block-fluid">
+                                    <div class="row-form clearfix">
+                                        <div class="span3">ID : </div>
+                                        <div class="span9">
+                                            #{brandAdminManaged.brand.brandID}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Tên nhãn hiệu : </div>
+                                        <div class="span9">
+                                            #{brandAdminManaged.brand.brandName}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Số lượng sản phẩm : </div>
+                                        <div class="span9">
+                                            #{brandAdminManaged.brand.productsCollection.size()}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dr">
+                                    <span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

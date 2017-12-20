@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-search"></span>
+                                        <span class="text">Đăng xuất</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <div class="page-header">
+                            <h1>Bill Detail</h1>
+                        </div>  
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="head clearfix">
+                                    <div class="isw-documents"></div>
+                                    <h1>Bill #100000000#{orderAdminManaged.order.orderID}</h1>
+                                </div>
+                                <div class="block-fluid">
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Bill ID : </div>
+                                        <div class="span9">
+                                            #100000000#{orderAdminManaged.order.orderID}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Status : </div>
+                                        <div class="span9">
+                                            <c:choose>
+                                                <c:when test="#{orderAdminManaged.order.orderStatus == -1}">
+                                                    Cancel
+                                                </c:when>
+                                                <c:when test="#{orderAdminManaged.order.orderStatus == 0}">
+                                                    New Order
+                                                </c:when>
+                                                <c:when test="#{orderAdminManaged.order.orderStatus == 1}">
+                                                    In progress
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Complete
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Buyers name : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.customerID.customerName}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Buyers address : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.customerID.customerAddress}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Buyers phone : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.customerID.customerPhone}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Buyers email : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.customerID.customerEmail}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Order Time : </div>
+                                        <div class="span9">
+                                            <h:outputText value="#{orderAdminManaged.order.orderDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                            </h:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Recipient Name : </div>
+                                        <div class="span9">
+                                            <h:outputText value="#{orderAdminManaged.order.orderName}" />
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Recipient mobile : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.orderMobile}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Recipient address : </div>
+                                        <div class="span9">
+                                            #{orderAdminManaged.order.orderAddress}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Product : </div>
+                                        <div class="span9">
+                                        </div>
+                                    </div>
+                                    <c:set var="total" value="0" />
+                                    <c:forEach items="#{orderAdminManaged.order.orderDetailsCollection}" var="detail">
+                                        <div class="row-form clearfix">
+                                            <div class="span3"></div>
+                                            <div class="span9">
+                                                <div class="span3">
+                                                    <h:form>
+                                                        Product : 
+                                                        <h:commandLink action="#{productAdminManaged.details(detail.productID.productID)}">
+                                                            <h6>#{detail.productID.productName}</h6>
+                                                        </h:commandLink>
+                                                    </h:form>
+                                                </div>
+                                                <div class="span3">Price :  
+                                                    <h:outputText value="#{detail.productID.productPrice}">
+                                                        <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                    </h:outputText>
+                                                </div>
+                                                <div class="span3">
+                                                    Quantity : #{detail.quantity}
+                                                </div>
+                                                <div class="span3">Total : 
+                                                    <h:outputText value="#{detail.productID.productPrice * detail.quantity}">
+                                                        <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                    </h:outputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <c:set var="total" value="#{total + detail.productID.productPrice * detail.quantity}" />
+                                    </c:forEach>
+                                    <div class="row-form clearfix">
+                                        <div class="span3"></div>
+                                        <div class="span9">
+                                            <div class="span3">
+                                            </div>
+                                            <div class="span3"> 
+                                            </div>
+                                            <div class="span3">
+                                            </div>
+                                            <div class="span3">
+                                                Total : <h:outputText value="#{total}">
+                                                    <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                </h:outputText>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer tar">
+                                        <h:form>
+                                            <c:choose>
+                                                <c:when test="#{orderAdminManaged.order.orderStatus == -1}">
+                                                    <h:commandButton class="btn" action="#{orderAdminManaged.changeStatus(orderAdminManaged.order.orderID, '0')}" value="New Order" />&nbsp;
+                                                </c:when>
+                                                <c:when test="#{orderAdminManaged.order.orderStatus == 0}">
+                                                    <h:commandButton class="btn" action="#{orderAdminManaged.changeStatus(orderAdminManaged.order.orderID, '-1')}" value="Cancel" />&nbsp;
+                                                    <h:commandButton class="btn" action="#{orderAdminManaged.changeStatus(orderAdminManaged.order.orderID, '1')}" value="In progress" />&nbsp;
+                                                </c:when>
+                                                <c:when test="#{orderAdminManaged.order.orderStatus == 1}">
+                                                    <h:commandButton class="btn" action="#{orderAdminManaged.changeStatus(orderAdminManaged.order.orderID, '0')}" value="New Order" />&nbsp;
+                                                    <h:commandButton class="btn" action="#{orderAdminManaged.changeStatus(orderAdminManaged.order.orderID, '2')}" value="Complete" />&nbsp;
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <h:commandLink class="btn" action="#{orderAdminManaged.changeStatus(orderAdminManaged.order.orderID, '1')}" value="In progress" />&nbsp;
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <h:commandLink class="btn" action="#{orderAdminManaged.remove(orderAdminManaged.order)}" value="Delete" onclick="return confirm('Are you sure you want to delete ?');" />&nbsp;
+                                            <a href="ListHoaDon.xhtml">
+                                                <button type="button" class="btn">Back</button>
+                                            </a>
+                                        </h:form>
+                                    </div>
+                                </div>
+                                <div class="dr">
+                                    <span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:if test="#{not empty session.getAttribute('username')}">
+                    #{facesContext.externalContext.redirect("index.xhtml")}
+                </c:if>
+                <div id="maincontainer">
+                    <div class="container">
+                        <div id="login">
+                            <h1 class="headingmain"><span>Create your account</span></h1>
+                            <f:view>
+                                <h:form>
+                                    <section class="returncustomer">
+                                        <h2 class="heading2">Welcome to Super Market Team 4 </h2>
+                                        <div class="loginbox">
+                                            <h4 class="heading4">You not have account? Please register!</h4>
+                                            <c:if test="#{not empty message}">
+                                                <div class="errors">
+                                                    <ul>
+                                                        <li style="color:red">#{message}</li>
+                                                    </ul>
+                                                </div>
+                                            </c:if>
+                                            <div class="form-vertical">
+                                                <fieldset>
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Username :</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="username" value="#{customerManaged.customer.username}" class="span3 input-full" required="true" requiredMessage="Username can not be empty">
+                                                                <f:validateLength minimum="3" maximum="30" />
+                                                            </h:inputText><br />
+                                                            <h:message for="username" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Password:</label>
+                                                        <div class="controls">
+                                                            <h:inputSecret id="password" value="#{customerManaged.customer.password}" class="span3 input-full" required="true" requiredMessage="Passwords must not be blank">
+                                                                <f:validateLength minimum="3" maximum="30" />
+                                                            </h:inputSecret><br />
+                                                            <h:message for="password" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Re password:</label>
+                                                        <div class="controls">
+                                                            <h:inputSecret id="re-password" value="#{customerManaged.repass}" class="span3 input-full" required="true" requiredMessage="re-password must not be blank">
+                                                                <f:validateLength minimum="3" maximum="30" />
+                                                            </h:inputSecret><br />
+                                                            <h:message for="re-password" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Fullname:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="name" value="#{customerManaged.customer.customerName}" class="span3 input-full" required="true" requiredMessage="Full name must not be blank">
+                                                                <f:validateLength minimum="3" maximum="60" />
+                                                            </h:inputText><br />
+                                                            <h:message for="name" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Email:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="email" value="#{customerManaged.customer.customerEmail}" class="span3 input-full" required="true" requiredMessage="Email can not be empty">
+                                                                <f:validateLength minimum="3" maximum="100" />
+                                                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                            </h:inputText><br />
+                                                            <h:message for="email" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Phone:</label>
+                                                        <div class="controls">
+                                                            <h:inputText id="phone" value="#{customerManaged.customer.customerPhone}" class="span3 input-full" required="true" requiredMessage="Phone number must not be blank">
+                                                                <f:validateLength minimum="10" maximum="11" />
+                                                                <f:validateRegex pattern="[0-9]{10,11}" />
+                                                            </h:inputText><br />
+                                                            <h:message for="phone" />
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Address:</label> 
+                                                        <div class="controls">
+                                                            <h:inputText id="address" value="#{customerManaged.customer.customerAddress}" class="span3 input-full" required="true" requiredMessage="Address can not be empty">
+                                                                <f:validateLength minimum="3" maximum="200" />
+                                                            </h:inputText><br />
+                                                            <h:message for="address" />
+                                                        </div>
+                                                    </div>
+                                                    <h:commandButton class="btn btn-success" value="Register" action="#{customerManaged.register()}" />
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </h:form>
+                            </f:view>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

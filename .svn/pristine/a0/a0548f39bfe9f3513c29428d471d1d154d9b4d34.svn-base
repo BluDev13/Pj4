@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div id="maincontainer">
+                    <div class="container">
+                        <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+                            <a href="/" title="general.breadcrumbs.home_link_title">Home</a>
+                            <span class="divider">/</span>
+                            <a href="" title="">Search</a>
+                        </nav>
+                    </div>
+                    <section id="latest">
+                        <div class="container">
+                            <div class="row">
+                                <div class="span12">
+                                    <h1 class="headingfull"><span>Search #{searchManaged.searchValue}</span></h1>
+                                    <ul class="thumbnails">
+                                        <ul class="products">
+                                            <c:choose> 
+                                                <c:when test="${empty searchManaged.items}">
+                                                    No product
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:forEach items="#{searchManaged.items}" var="newList">
+                                                        <h:form>
+                                                            <li class="span3">
+                                                                <h:commandLink class="prdocutname" action="#{productManaged.showProduct()}">
+                                                                    <f:param name="productID" value="#{newList.productID}" />
+                                                                    #{newList.productName}
+                                                                </h:commandLink>
+                                                                <div class="thumbnail">
+                                                                    <span class="sale tooltip-test" data-original-title="">Hot</span>
+                                                                    <h:commandLink action="#{productManaged.showProduct()}">
+                                                                        <f:param name="productID" value="#{newList.productID}" />
+                                                                        <img src="#{imagesPath}/#{newList.thumbImage}" style="width: 250px; height: 314px;" />
+                                                                    </h:commandLink>
+                                                                    <div class="caption">
+                                                                        <div class="price pull-left">
+                                                                            <span class="newprice">
+                                                                                <h:outputText value="#{newList.productPrice}">
+                                                                                    <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                            <span class="newprice" style="color: #999; background-color: white; font-size: 14px">
+                                                                                #{newList.quantity} product available
+                                                                            </span>
+                                                                        </div>
+                                                                        <c:if test="#{empty session.getAttribute('username')}">
+                                                                            <span class="cartadd addtocart pull-right tooltip-test" style="border:0;" />
+                                                                        </c:if>
+                                                                        <c:if test="#{not empty session.getAttribute('username')}">
+                                                                            <h:commandButton class="cartadd addtocart pull-right tooltip-test" style="border:0;" action="#{cartManaged.addCart(newList)}">
+                                                                            </h:commandButton>
+                                                                        </c:if>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </h:form>
+                                                    </c:forEach>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </ul>
+                                    </ul>
+                                    <h:form>
+                                        <h:outputText value="From #{searchManaged.pagination.pageFirstItem + 1} To #{searchManaged.pagination.pageLastItem + 1} Of Total : #{searchManaged.pagination.itemsCount} Record"/>&nbsp;
+                                        <h:commandLink action="#{searchManaged.previous}" value="Prev" rendered="#{searchManaged.pagination.hasPreviousPage}"/>&nbsp;
+                                        <h:commandLink action="#{searchManaged.next}" value="Next" rendered="#{searchManaged.pagination.hasNextPage}"/>&nbsp;
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

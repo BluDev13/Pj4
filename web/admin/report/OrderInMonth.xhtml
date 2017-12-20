@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      >
+    <h:head>
+        <title>Order In Month</title>
+        <script src="../../resources/js/jquery-1.12.1.min.js" type="text/javascript"></script>
+        <link href="../../resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <script src="../../resources/javascript/Chart.bundle.js" type="text/javascript"></script>
+        <script src="../../resources/js/utils.js" type="text/javascript"></script>
+        <script src="../../resources/js/year-select.js" type="text/javascript"></script>
+        <style>
+            
+            canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        </style>
+       
+    </h:head>
+    <h:body>
+        <br/>
+        <br/>
+        <h:form>
+        <table>
+            <tr>
+                <td width="80%" align="right">Select Year : </td>
+                <td><h:inputText class="yearselect sample form-control" id="sample" value="#{systemManaged.year}"></h:inputText></td>
+                <td><h:commandButton class="btn btn-success" value="OK" action="#{systemManaged.Back()}" /></td>
+            </tr>
+        </table>
+         </h:form>
+            
+            
+        
+        
+        
+        <script type="text/javascript">
+            $(document).ready(function(e) {
+                $('.yearselect').yearselect();
+
+                $('.yrselectdesc').yearselect({step: 5, order: 'desc'});
+                $('.yrselectasc').yearselect({order: 'asc'});
+            });
+        </script>
+        <div style="width: 75%">
+        <canvas id="canvas"></canvas>
+        </div>
+        <script>
+            var color = Chart.helpers.color;
+            var barChartData = {
+                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                datasets: [{
+                    type: 'bar',
+                    label: 'VND',
+                    backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
+                    borderColor: window.chartColors.red,
+                    data: [
+                        #{systemManaged.orderInM(1)},
+                        #{systemManaged.orderInM(2)},
+                        #{systemManaged.orderInM(3)},
+                        #{systemManaged.orderInM(4)},
+                        #{systemManaged.orderInM(5)},
+                        #{systemManaged.orderInM(6)},
+                        #{systemManaged.orderInM(7)},
+                        #{systemManaged.orderInM(8)},
+                        #{systemManaged.orderInM(9)},
+                        #{systemManaged.orderInM(10)},
+                        #{systemManaged.orderInM(11)},
+                        #{systemManaged.orderT12()}
+                    ]
+                }]
+            };
+
+            // Define a plugin to provide data labels
+            Chart.plugins.register({
+                afterDatasetsDraw: function(chart, easing) {
+                    // To only draw at the end of animation, check for easing === 1
+                    var ctx = chart.ctx;
+
+                    chart.data.datasets.forEach(function (dataset, i) {
+                        var meta = chart.getDatasetMeta(i);
+                        if (!meta.hidden) {
+                            meta.data.forEach(function(element, index) {
+                                // Draw the text in black, with the specified font
+                                ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                                var fontSize = 16;
+                                var fontStyle = 'normal';
+                                var fontFamily = 'Helvetica Neue';
+                                ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                // Just naively convert to string for now
+                                var dataString = dataset.data[index].toString();
+
+                                // Make sure alignment settings are correct
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+
+                                var padding = 5;
+                                var position = element.tooltipPosition();
+                                ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                            });
+                        }
+                    });
+                }
+            });
+
+            window.onload = function() {
+                var ctx = document.getElementById("canvas").getContext("2d");
+                window.myBar = new Chart(ctx, {
+                    type: 'bar',
+                    data: barChartData,
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Order in month'
+                        },
+                    }
+                });
+            };
+
+       
+    </script>
+    </h:body>
+</html>
+

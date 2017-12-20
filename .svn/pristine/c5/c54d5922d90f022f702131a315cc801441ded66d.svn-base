@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Detail Order</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:choose>
+                    <c:when test="#{empty session.getAttribute('username')}">
+                        #{facesContext.externalContext.redirect("index.xhtml")}
+                    </c:when>
+                    <c:otherwise>
+                        <div id="maincontainer">
+                            <div class="container">
+                                <h1 class="headingmain"><span>Order Detail</span></h1>
+                                <div id="login">
+                                    <section class="returncustomer" style="width: 96%">
+                                        <div class="form-vertical">
+                                            <fieldset>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">ID :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #100000000#{orderDetailManaged.order.orderID}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Status :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+
+                                                        <c:choose>
+                                                            <c:when test="#{orderDetailManaged.order.orderStatus == -1}">
+                                                                Cancel
+                                                            </c:when>
+                                                            <c:when test="#{orderDetailManaged.order.orderStatus == 2}">
+                                                                Complete
+                                                            </c:when>
+                                                            <c:when test="#{orderDetailManaged.order.orderStatus == 1}">
+                                                                In progress
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                New Order
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <h:form>
+                                                        <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Action :</span>
+                                                        <span class="controls" style="font-size: 16px;">
+                                                            <c:if test="#{orderDetailManaged.order.orderStatus == 0}">
+                                                                <h:commandLink action="#{orderDetailManaged.cancel(orderDetailManaged.order.orderID)}" value="Cancel" />
+                                                            </c:if>
+                                                        </span>
+                                                    </h:form>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Buyers name :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.customerID.customerName}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Buyers address :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.customerID.customerAddress}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Buyers phone :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.customerID.customerPhone}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Buyers email :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.customerID.customerEmail}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Order Time:</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        <h:outputText value="#{orderDetailManaged.order.orderDate}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                                        </h:outputText>
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Recipient Name :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.orderName}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Recipient mobile :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.orderMobile}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold">Recipient address :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{orderDetailManaged.order.orderAddress}
+                                                    </span>
+                                                </div>
+                                                <c:set var="total" value="0" />
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold; vertical-align: top">Product :</span>
+                                                    <c:forEach items="#{orderDetailManaged.order.orderDetailsCollection}" var="detail">
+                                                        <div class="controls" style="display: inline-block">
+                                                            <div style="min-width: 300px;display: inline-block">
+                                                                Product : 
+                                                                <h:form style="display:inline-block;">
+                                                                    <h:commandLink action="#{productManaged.showProduct()}">
+                                                                        <f:param name="productID" value="#{detail.productID.productID}" />
+                                                                        <h6>#{detail.productID.productName}</h6>
+                                                                    </h:commandLink>
+                                                                </h:form>
+                                                            </div>
+                                                            <div style="min-width: 150px;display: inline-block">
+                                                                Price : 
+                                                                <h:outputText value="#{detail.productID.productPrice}">
+                                                                    <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                </h:outputText>
+                                                            </div>
+                                                            <div style="min-width: 150px;display: inline-block">
+                                                                Quantity :
+                                                                #{detail.quantity}
+                                                            </div>
+                                                            <div style="min-width: 150px;display: inline-block">
+                                                                Total :
+                                                                <h:outputText value="#{detail.productID.productPrice * detail.quantity}">
+                                                                    <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                </h:outputText>
+                                                            </div>
+                                                        </div>
+                                                        <span class="control-label" style="display:inline-block; margin-right: 60px; width: 140px; font-weight: bold; vertical-align: top"></span>
+                                                        <c:set var="total" value="#{total + detail.productID.productPrice * detail.quantity}" />
+                                                    </c:forEach>
+                                                    <div class="controls" style="display: inline-block">
+                                                        <div style="min-width: 300px;display: inline-block">
+                                                            <h:form></h:form>
+                                                        </div>
+                                                        <div style="min-width: 150px;display: inline-block">
+                                                        </div>
+                                                        <div style="min-width: 150px;display: inline-block">
+                                                        </div>
+                                                        <div style="min-width: 150px;display: inline-block">
+                                                            Total :
+                                                            <h:outputText value="#{total}">
+                                                                <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                            </h:outputText>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div style="clear: both"></div>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

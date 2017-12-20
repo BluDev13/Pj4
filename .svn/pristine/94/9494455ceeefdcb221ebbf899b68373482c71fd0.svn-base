@@ -1,0 +1,57 @@
+
+package manager;
+
+import entities.Products;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import model.ProductsFacade;
+
+@ManagedBean
+@SessionScoped
+public class ProductManaged implements Serializable {
+    
+    @EJB
+    private ProductsFacade productsFacade;
+    private int productID;
+    private Products product;
+    
+    public ProductManaged() {
+        if(product == null){
+            product = new Products();
+        }
+    }
+    
+    public List<Products> getNewList(){
+        return productsFacade.findAll();
+    }
+    
+    public List<Products> getOrderList(){
+        return productsFacade.findAllOrder();
+    }
+    
+    public List<Products> getRelatedList(String categoryID){
+        return productsFacade.findRelated(Integer.parseInt(categoryID));
+    }
+
+    public String showProduct(){
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int id = Integer.parseInt(params.get("productID"));
+        if (id <= 0) {
+            return "index";
+        } else {
+            this.productID = id;
+            this.product = productsFacade.find(id);
+            return "ViewProduct";
+        }
+    }
+    
+    public Products getProduct(){
+        return product;
+    }
+   
+}

@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-off"></span>
+                                        <span class="text">Log out</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <div class="page-header">
+                            <h1>News Detail</h1>
+                        </div>  
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="head clearfix">
+                                    <div class="isw-documents"></div>
+                                    <h1>News Detail</h1>
+                                </div>
+                                <div class="block-fluid">
+                                    <div class="row-form clearfix">
+                                        <div class="span3">ID : </div>
+                                        <div class="span9">
+                                            #{newsDetailManaged.newsDetail.newsID}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Title : </div>
+                                        <div class="span9">
+                                            #{newsDetailManaged.newsDetail.newsTitle}
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Date : </div>
+                                        <div class="span9">
+                                            <h:outputText value="#{newsDetailManaged.newsDetail.newsDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Category : </div>
+                                        <div class="span9">
+                                            #{newsDetailManaged.newsDetail.newsCateID.newsCateName}
+                                        </div>
+                                    </div>
+
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Image : </div>
+                                        <div class="span9">
+                                            <img src="#{newsPath}/#{newsDetailManaged.newsDetail.newsImage}" style="width: 100px; height: 100px" />
+                                        </div>
+                                    </div>
+                                    <div class="row-form clearfix">
+                                        <div class="span3">Content : </div>
+                                        <div class="span9">
+                                            #{newsDetailManaged.newsDetail.newsContent}
+                                        </div>
+                                    </div>
+                                    <div class="footer tar">
+                                        <a href="ListTinTuc.xhtml">
+                                            <button class="btn">Back</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="dr">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

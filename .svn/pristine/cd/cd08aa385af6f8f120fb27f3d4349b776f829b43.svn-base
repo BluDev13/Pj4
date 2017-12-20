@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:if test="#{empty session.getAttribute('username')}">
+                    #{facesContext.externalContext.redirect("index.xhtml")}
+                </c:if>
+                <div id="maincontainer">
+                    <div class="container">
+                        <div id="login">
+                            <h1 class="headingmain"><span>Change Password</span></h1>
+                            <f:view>
+                                <h:form>
+                                    <section class="returncustomer">
+                                        <div class="loginbox">
+                                            <div class="form-vertical">
+                                                <fieldset>
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Current password:</label>
+                                                        <div class="controls">
+                                                            <h:inputSecret id="pass" value="#{changePassManaged.currentPass}" class="span3 input-full" required="true" requiredMessage="Passwords must not be blank" validator="#{changePassManaged.validateOldPass}">
+                                                                <f:validateLength minimum="3" maximum="20" />
+                                                            </h:inputSecret><br />
+                                                            <h:message for="pass" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">New Password:</label>
+                                                        <div class="controls">
+                                                            <h:inputSecret id="newpass" value="#{changePassManaged.newPass}" class="span3 input-full" required="true" requiredMessage="Passwords must not be blank">
+                                                                <f:validateLength minimum="3" maximum="20" />
+                                                            </h:inputSecret><br />
+                                                            <h:message for="newpass" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="control-group">
+                                                        <label  class="control-label">Confirm:</label>
+                                                        <div class="controls">
+                                                            <h:inputSecret id="confirm" value="#{changePassManaged.confirmPass}" class="span3 input-full" required="true" requiredMessage="Passwords must not be blank">
+                                                                <f:validateLength minimum="3" maximum="20" />
+                                                            </h:inputSecret><br />
+                                                            <h:message for="confirm" />
+                                                            <c:if test="#{not empty message}">#{message}
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
+                                                    <h:commandButton class="btn btn-success" value="Change" action="#{changePassManaged.update()}" />
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </h:form>
+                            </f:view>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

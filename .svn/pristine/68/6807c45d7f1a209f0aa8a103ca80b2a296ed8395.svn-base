@@ -1,0 +1,68 @@
+package admin.manager;
+
+import entities.Customers;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import manager.SessionManaged;
+import model.CustomersFacade;
+
+@ManagedBean(name = "customerAdminManaged")
+@RequestScoped
+public class CustomerManaged {
+
+    @EJB
+    private CustomersFacade customersFacade;
+    private Customers customer;
+
+    public CustomerManaged() {
+        if (customer == null) {
+            customer = new Customers();
+        }
+    }
+
+    public List<Customers> getList() {
+        return customersFacade.findAll();
+    }
+    
+    public List<Customers> getListTiemNang() {
+        return customersFacade.findTiemNang();
+    }
+
+    public Customers getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customers customer) {
+        this.customer = customer;
+    }
+
+    public String login() {
+        if (customersFacade.checkLogin(customer.getUsername(), customer.getPassword(), "Admin")) {
+            SessionManaged.getSession().setAttribute("adminuser", customer.getUsername());
+            return "index";
+        }
+        SessionManaged.getRequest().setAttribute("message", "Username or password incorrect");
+        return null;
+    }
+
+    public String deleteCustomer(Customers cate) {
+        customersFacade.remove(cate);
+        SessionManaged.getRequest().setAttribute("message", "Success");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Member deleted successfully");
+        return "ListThanhVien";
+    }
+
+    public String details(int id) {
+        customer = customersFacade.find(id);
+        return "ChiTietThanhVien";
+    }
+
+    public String setRole(String role, int id) {
+        Customers roleCustomer = customersFacade.find(id);
+        roleCustomer.setCustomerRole(role);
+        customersFacade.edit(roleCustomer);
+        return "ListThanhVien";
+    }
+}

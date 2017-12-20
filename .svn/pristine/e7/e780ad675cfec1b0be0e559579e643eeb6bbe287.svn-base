@@ -1,0 +1,183 @@
+package admin.manager;
+
+import classes.util.JsfUtil;
+import entities.Brands;
+import entities.Category;
+import entities.Products;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
+import javax.servlet.http.Part;
+import manager.SessionManaged;
+import model.BrandsFacade;
+import model.CategoryFacade;
+import model.ProductsFacade;
+
+@ManagedBean(name = "productAdminManaged")
+@RequestScoped
+public class ProductManaged {
+
+    @EJB
+    private CategoryFacade categoryFacade;
+    @EJB
+    private ProductsFacade productsFacade;
+    @EJB
+    private BrandsFacade brandsFacade;
+
+    private Products product;
+    private Brands brand;
+    private Part file;
+
+    public ProductManaged() {
+        if (product == null) {
+            product = new Products();
+        }
+        if (brand == null) {
+            brand = new Brands();
+        }
+    }
+
+    public Brands getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brands brand) {
+        this.brand = brand;
+    }
+
+    public Part getFile() {
+        return file;
+    }
+
+    public void setFile(Part file) {
+        this.file = file;
+    }
+
+    public Products getProduct() {
+        return product;
+    }
+
+    public void setProduct(Products product) {
+        this.product = product;
+    }
+
+    public List<Products> getList() {
+        return productsFacade.findAll();
+    }
+
+    public SelectItem[] getCategoryItems() {
+        return JsfUtil.getSelectItems(categoryFacade.findAll(), true);
+    }
+
+    public SelectItem[] getBrandItems() {
+        return JsfUtil.getSelectItems(brandsFacade.findAll(), true);
+    }
+
+    public String createProduct() {
+        String uploadRootPath = SessionManaged.getRequest().getServletContext().getRealPath("resources/product_images");
+        File uploadRootDir = new File(uploadRootPath);
+        if (!uploadRootDir.exists()) {
+            uploadRootDir.mkdirs();
+        }
+        File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + file.getSubmittedFileName());
+        try {
+            InputStream is;
+            OutputStream os;
+            is = file.getInputStream();
+            os = new FileOutputStream(serverFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+            is.close();
+            os.close();
+        } catch (IOException e) {
+        }
+        product.setThumbImage(file.getSubmittedFileName());
+        product.setOrderCount(0);
+        productsFacade.create(product);
+        SessionManaged.getRequest().setAttribute("message", "Thành công");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Thêm sản phẩm mới thành công");
+        return "ListSanPham";
+    }
+
+    public void validateFile(FacesContext ctx, UIComponent comp, Object value) {
+        Part fileValid = (Part) value;
+        List<FacesMessage> msgs = new ArrayList<>();
+        if (!"image/png".equals(fileValid.getContentType()) && !"image/jpeg".equals(fileValid.getContentType()) && !"image/gif".equals(fileValid.getContentType())) {
+            msgs.add(new FacesMessage("Tệp tin không hợp lệ"));
+        }
+        if (!msgs.isEmpty()) {
+            throw new ValidatorException(msgs);
+        }
+    }
+    
+    public String preUpdate(int id){
+        product = productsFacade.find(id);
+        return "EditSanPham";
+    }
+    
+    public String updateSanPham(){
+        String uploadRootPath = SessionManaged.getRequest().getServletContext().getRealPath("resources/product_images");
+        File uploadRootDir = new File(uploadRootPath);
+        if (!uploadRootDir.exists()) {
+            uploadRootDir.mkdirs();
+        }
+        File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + file.getSubmittedFileName());
+        try {
+            InputStream is;
+            OutputStream os;
+            is = file.getInputStream();
+            os = new FileOutputStream(serverFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+            is.close();
+            os.close();
+        } catch (IOException e) {
+        }
+        product.setThumbImage(file.getSubmittedFileName());
+        productsFacade.edit(product);
+        SessionManaged.getRequest().setAttribute("message", "Thành công");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Chỉnh sửa thông tin thành công");
+        return "ListSanPham";
+    }
+    
+    public String deleteCategory(Products cate){
+        productsFacade.remove(cate);
+        SessionManaged.getRequest().setAttribute("message", "Thành công");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Xóa sản phẩm thành công");
+        return "ListSanPham";
+    }
+    
+    public String details(int id){
+        product = productsFacade.find(id);
+        return "ChiTietSanPham";
+    }
+    
+    
+    public Category getCategoryConverter(int id){
+        return categoryFacade.find(id);
+    }
+    
+    public Brands getBrandConverter(int id){
+        return brandsFacade.find(id);
+    }
+    
+    
+}

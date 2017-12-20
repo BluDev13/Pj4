@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div id="maincontainer">
+                    <section class="slider">
+                        <div class="container">
+                            <div class="flexslider" id="mainslider">
+                                <ul class="slides">
+                                    <li style="width: 1170px; float: left; display: block;">
+                                        <a href="">
+                                            <img src="#{root}/resources/images/slide_2_img.jpg" alt="Team 4" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> 
+                    </section> 
+
+                    <section id="latest">
+                        <div class="container">
+                            <div class="row">
+                                <div class="span12">
+
+                                    <h1 class="headingfull"><span>Sản phẩm ưa chuộng</span></h1>
+                                    <ul class="thumbnails">
+                                        <ul class="products">
+
+                                            <c:forEach items="#{productManaged.orderList}" var="newList">
+                                                <li class="span3">
+                                                    <a class="prdocutname" href="ViewProduct.xhtml?id=#{newList.productID}">#{newList.productName}</a>
+                                                    <div class="thumbnail">
+                                                        <span class="sale tooltip-test" data-original-title="">Hot</span>
+                                                        <h:form>
+                                                            <h:commandLink action="#{productManaged.showProduct()}">
+                                                                <f:param name="productID" value="#{newList.productID}" />
+                                                                <img src="#{imagesPath}/#{newList.thumbImage}" style="width: 250px; height: 314px;" />
+                                                            </h:commandLink>
+                                                        </h:form>
+                                                        <div class="caption">
+                                                            <div class="price pull-left">
+                                                                <span class="newprice">
+                                                                    <h:outputText value="#{newList.productPrice}">
+                                                                        <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                    </h:outputText>
+                                                                </span>
+                                                                <span class="newprice" style="color: #999; background-color: white; font-size: 14px">
+                                                                    Còn #{newList.quantity} sản phẩm
+                                                                </span>
+                                                            </div>
+                                                            <h:form>
+                                                                <c:if test="#{empty session.getAttribute('username')}">
+                                                                    <span class="cartadd addtocart pull-right tooltip-test" style="border:0;" />
+                                                                </c:if>
+                                                                <c:if test="#{not empty session.getAttribute('username')}">
+                                                                    <h:commandButton class="cartadd addtocart pull-right tooltip-test" style="border:0;" action="#{cartManaged.addCart(newList)}">
+                                                                    </h:commandButton>
+                                                                </c:if>
+                                                            </h:form>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="latest">
+                        <div class="container">
+                            <div class="row">
+                                <div class="span12">
+
+                                    <h1 class="headingfull"><span>Sản phẩm mới</span></h1>
+                                    <ul class="thumbnails">
+                                        <ul class="products">
+                                            <c:forEach items="#{productManaged.newList}" var="newList">
+                                                <li class="span3">
+                                                    <a class="prdocutname" href="ViewProduct.xhtml?id=#{newList.productID}">#{newList.productName}</a>
+                                                    <div class="thumbnail">
+                                                        <span class="sale tooltip-test" data-original-title="">Hot</span>
+                                                        <h:form>
+                                                            <h:commandLink action="#{productManaged.showProduct()}">
+                                                                <f:param name="productID" value="#{newList.productID}" />
+                                                                <img src="#{imagesPath}/#{newList.thumbImage}" style="width: 250px; height: 314px;" />
+                                                            </h:commandLink>
+                                                        </h:form>
+                                                        <div class="caption">
+                                                            <div class="price pull-left">
+                                                                <span class="newprice">
+                                                                    <h:outputText value="#{newList.productPrice}">
+                                                                        <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                    </h:outputText>
+                                                                </span>
+                                                                <span class="newprice" style="color: #999; background-color: white; font-size: 14px">
+                                                                    Còn #{newList.quantity} sản phẩm
+                                                                </span>
+                                                            </div>
+                                                            <h:form>
+                                                                <c:if test="#{empty session.getAttribute('username')}">
+                                                                    <span class="cartadd addtocart pull-right tooltip-test" style="border:0;" />
+                                                                </c:if>
+                                                                <c:if test="#{not empty session.getAttribute('username')}">
+                                                                    <h:commandButton class="cartadd addtocart pull-right tooltip-test" style="border:0;" action="#{cartManaged.addCart(newList)}">
+                                                                    </h:commandButton>
+                                                                </c:if>
+                                                            </h:form>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

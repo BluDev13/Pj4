@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:if test="#{(empty session.getAttribute('adminuser'))}">
+                    #{facesContext.externalContext.redirect("Login.xhtml")}
+                </c:if>
+                <c:if test="#{(!empty session.getAttribute('adminuser'))}">
+                    <c:set var="user" value="#{customerManaged.findUserByName(session.getAttribute('adminuser'))}" />
+                </c:if>
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-off"></span>
+                                        <span class="text">Log out</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <script type="text/javascript" charset="utf-8">
+                            $(document).ready(function() {
+                                $('#example').dataTable({
+                                    "aaSorting": [[0, "desc"]]
+                                });
+                            });
+                        </script>
+                        <div class="page-header">
+                            <h1>Admin List</h1>
+                        </div>
+                        <c:if test="#{not empty message}">
+                            <div class="alert alert-success">                
+                                <h4>#{message}!</h4>
+                                #{messageDetails}
+                            </div>
+                        </c:if>
+                        <div class="row-fluid">
+                            <div class="span12">                    
+                                <div class="head clearfix">
+                                    <div class="isw-grid"></div>
+                                    <h1>Admin List</h1>                         
+                                </div>
+                                <div class="block-fluid table-sorting clearfix">
+                                    <table cellpadding="0" cellspacing="0" width="100%" class="table" id="example">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Username</th>
+                                                <th>Name</th>
+                                                <th>Address</th>
+                                                <th>Email</th>
+                                                <th>Mobile</th>
+                                                <th>Role</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="#{customerAdminManaged.listAdmin}" var="row">
+                                                <tr>
+                                                    <td style="width: 5%">#{row.customerID}</td>
+                                                    <td style="width: 10%">
+                                                        <h:form>
+                                                            <h:commandLink action="#{customerAdminManaged.details(row.customerID)}">
+                                                                <c:choose>
+                                                                    <c:when test="#{row.customerRole.equalsIgnoreCase('sysadmin')}">
+                                                                        <h6 style="color: red; font-weight: bold">#{row.username}</h6>
+                                                                    </c:when>
+                                                                    <c:when test="#{row.customerRole.equalsIgnoreCase('admin')}">
+                                                                        <h6 style="color: green; font-weight: bold">#{row.username}</h6>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <h6>#{row.username}</h6>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </h:commandLink>
+                                                        </h:form>
+                                                    </td>
+                                                    <td style="width: 20%">#{row.customerName}</td>
+                                                    <td style="width: 20%">#{row.customerAddress}</td>
+                                                    <td style="width: 15%">#{row.customerEmail}</td>
+                                                    <td style="width: 20%">
+                                                        #{row.customerPhone}
+                                                    </td>
+                                                    <td style="width: 20%">#{row.customerRole}</td>
+                                                    <td style="width: 20%">
+                                                        <c:if test="#{!row.username.equals(session.getAttribute('adminuser')) and !row.customerRole.equalsIgnoreCase('SysAdmin')}">
+                                                            <c:if test="#{!(user.customerRole.equalsIgnoreCase('admin') and row.customerRole.equalsIgnoreCase('admin'))}">
+                                                                <div class="btn-group" align="center">                                        
+                                                                    <button data-toggle="dropdown" class="btn dropdown-toggle">Action
+                                                                        <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="min-width: 100px;">
+                                                                        <h:form>
+                                                                            <c:choose>
+                                                                                <c:when test="#{user.customerRole.equalsIgnoreCase('sysadmin')}">
+                                                                                    <c:if test="#{row.customerRole.equalsIgnoreCase('Admin')}">
+                                                                                        <li>
+                                                                                            <h:commandLink value="Set User" action="#{customerAdminManaged.setRole('User', row.customerID)}"/>
+                                                                                        </li>
+                                                                                    </c:if>
+                                                                                    <c:if test="#{row.customerRole.equalsIgnoreCase('User')}">
+                                                                                        <li>
+                                                                                            <h:commandLink value="Set Admin" action="#{customerAdminManaged.setRole('Admin', row.customerID)}" />
+                                                                                        </li>
+                                                                                    </c:if>
+                                                                                    <li class="divider"></li>
+                                                                                    <li>
+                                                                                        <h:commandLink value="Delete" action="#{customerAdminManaged.deleteCustomer(row)}" onclick="return confirm('Deleting user will delete all orders of user. Do you want to delete ?');" />
+                                                                                    </li>
+                                                                                </c:when>
+                                                                                <c:when test="#{user.customerRole.equalsIgnoreCase('admin')}">
+                                                                                    <li>
+                                                                                        <h:commandLink value="Delete" action="#{customerAdminManaged.deleteCustomer(row)}" onclick="return confirm('Deleting user will delete all orders of user. Do you want to delete ?');" />
+                                                                                    </li>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </h:form>
+                                                                    </ul>
+                                                                </div>
+                                                            </c:if>
+                                                        </c:if>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>                                                             
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                        
+                        </div>
+                        <div class="dr">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

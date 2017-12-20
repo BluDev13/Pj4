@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <header>
+                <div class="navbar navbar-fixed-top" id="main-nav">
+                    <div class="container">
+                        <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <nav class="nav-collapse collapse" style="height:0px">
+                            <ul class="nav">
+
+                                <li class="active">
+                                    <a href="#{root}">Home</a>
+                                </li>
+
+                                <li class="active">
+                                    <a href="#{root}/LienHe.xhtml">Help &amp; Contact</a>
+                                </li>
+
+                                <li class="active">
+                                    <c:if test="#{empty session.getAttribute('username')}">
+                                        <a href="#{root}/DangNhap.xhtml">Log In</a>
+                                    </c:if>
+                                    <c:if test="#{not empty session.getAttribute('username')}">
+                                        <a href="#{root}/ThongTin.xhtml">Hi , #{session.getAttribute("username")}</a>
+                                    </c:if>
+                                </li>
+
+                                <li class="active">
+                                    <a href="#{root}/GioHang.xhtml">Cart</a>
+                                </li>
+
+                                <li class="active">
+                                    <a href="#{root}/ThanhToan.xhtml">Pay</a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                        <c:if test="#{not empty session.getAttribute('username')}">
+                            <ul class="nav pull-right left-tablet">
+                                <li class="dropdown hover topcart">
+                                    <a class="dropdown-toggle" href="#{root}/GioHang.xhtml">
+                                        <i class="carticon"></i> Saved <span class="label label-success font14">(#{cartManaged.count} Items)</span> - 
+                                        <h:outputText value="#{cartManaged.total}">
+                                            <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                        </h:outputText>
+                                    </a>
+                                </li>
+                            </ul>
+                        </c:if>
+                    </div>
+                </div>
+                <div class="header-white">
+                    <div class="container">
+                        <div class="row">
+                            <div class="span4">
+                                <a href="#{root}" title="">
+                                    <img src="#{root}/resources/images/logo.jpg" alt="" title=""/> 
+                                </a>
+                            </div>
+                            <div class="span8">
+                                <div class="row">
+                                    <div class="pull-right logintext">Welcome to Online Fashion Shop
+                                    </div>
+                                </div>
+                                <h:form class="form-search marginnull topsearch pull-right">
+                                    <h:inputText class="input-large search-query search-icon-top" value="#{searchManaged.searchValue}" />
+                                    <h:commandButton action="#{searchManaged.search()}" class="btn btn-success" style="margin-left: 5px;" value="Search" /> 
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="categorymenu">
+                        <div class="container">
+                            <h:form>
+                                <nav class="subnav">
+                                    <ul class="nav-pills categorymenu">
+                                        <li>
+                                            <a href="#{root}" class="">
+                                                Home
+                                            </a>
+                                        </li>
+                                        <c:forEach items="#{categoryManaged.list}" var="categoryItem">
+                                            <c:if test="#{categoryItem.categorySub==null}">
+                                                <li>
+                                                    <h:commandLink action="#{categoryManaged.showCategory}" value="#{categoryItem.categoryName}" class="">
+                                                        <f:param name="categoryID" value="#{categoryItem.categoryID}" />
+                                                    </h:commandLink>
+                                                    <div>
+                                                        <ul class="arrow">
+                                                            <c:forEach items="#{categoryManaged.list}" var="child">
+                                                                <c:if test="#{child.categorySub==categoryItem.categoryID}">
+                                                                    <li>
+                                                                        <h:commandLink action="#{categoryManaged.showCategory}" value="#{child.categoryName}" class="">
+                                                                            <f:param name="categoryID" value="#{child.categoryID}" />
+                                                                        </h:commandLink>
+                                                                    </li>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </c:if>
+                                        </c:forEach>
+                                        <li>
+                                            <a href="#" class="">
+                                                Brand
+                                            </a>
+                                            <div>
+                                                <ul class="arrow">
+                                                    <c:forEach items="#{brandManaged.list}" var="child">
+                                                        <li>
+                                                            <h:commandLink action="#{brandManaged.showBrand()}" value="#{child.brandName}" class="">
+                                                                <f:param name="brandID" value="#{child.brandID}" />
+                                                            </h:commandLink>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li><a href="#{root}/TinTuc.xhtml" class="">
+                                                News </a>
+                                            <ul>
+                                                <c:forEach items="#{newsManaged1.list}" var="newsCateItem">
+                                                    <li>
+                                                        <h:commandLink action="#{newsManaged1.showNewsCate()}" value="#{newsManaged1.newsCate.newsCateName}" class="">
+                                                            <f:param name="newsCateItem" value="#{newsCateItem.newsCateName}" />
+                                                        </h:commandLink>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#{root}/LienHe.xhtml" class="">
+                                                Help &amp; Contact </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+        </ui:composition>
+    </h:body>
+</html>
+

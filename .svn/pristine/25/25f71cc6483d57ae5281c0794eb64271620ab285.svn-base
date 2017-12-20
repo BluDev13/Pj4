@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:set var='category' value='#{categoryManaged.category}' />
+                <c:choose> 
+                    <c:when test="${empty category}">
+                        #{facesContext.externalContext.redirect("404.xhtml")}
+                    </c:when>
+                    <c:otherwise>
+                        <div id="maincontainer">
+                            <div class="container">
+                                <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+                                    <a href="/" title="general.breadcrumbs.home_link_title">Home</a>
+                                    <span class="divider">/</span>
+                                    <a href="ChuyenMuc.xhtml?id=#{searchCategoryManaged.category.categoryID}" title="">#{searchCategoryManaged.category.categoryName}</a>
+                                </nav>
+                            </div>
+                            <section id="latest">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="span12">
+                                            <h1 class="headingfull"><span>Category #{searchCategoryManaged.category.categoryName}</span></h1>
+                                            <section class="returncustomer" style="width: 96%">
+                                                <h:form>
+                                                    <div class="control-group">
+                                                        #{message}
+                                                        <div class="controls">
+                                                            <div>
+                                                                Name : 
+                                                            </div>
+                                                            <div style="min-width: 100px; width: 100px; display: inline">
+                                                                <h:inputText id="name" value="#{searchCategoryManaged.name}" class="span3 input-full">
+                                                                </h:inputText>
+                                                                <h:message for="name" />
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="controls">
+                                                            <div style="min-width: 100px; width: 100px; display: inline">
+                                                                PRICE : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <h:inputText id="from" value="#{searchCategoryManaged.from}" style="width: 50px;" class="span3 input-full">
+                                                                    <f:convertNumber />
+                                                                </h:inputText>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TO :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <h:inputText id="to" value="#{searchCategoryManaged.to}" style="width: 50px;" class="span3 input-full">
+                                                                    <f:convertNumber />
+                                                                </h:inputText>
+                                                                <h:messages for="to" />
+                                                                <h:messages for="from" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="controls">
+                                                            <div style="min-width: 100px; width: 100px; display: inline">
+                                                                <h:commandButton class="btn btn-success" value="Search" action="#{searchCategoryManaged.search(categoryManaged.category.categoryID)}" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </h:form>
+                                            </section>
+                                            <ul class="thumbnails">
+                                                <ul class="products">
+                                                    <c:if test="#{searchCategoryManaged.list.size() == 0}">
+                                                        No product in #{searchCategoryManaged.category.categoryName} category
+                                                    </c:if>
+                                                    <c:forEach items="#{searchCategoryManaged.list}" var="newList">
+                                                        <li class="span3">
+                                                            <h:form>
+                                                                <h:commandLink class="prdocutname" action="#{productManaged.showProduct()}">
+                                                                    <f:param name="productID" value="#{newList.productID}" />
+                                                                    #{newList.productName}
+                                                                </h:commandLink>
+                                                            </h:form>
+                                                            <div class="thumbnail">
+                                                                <span class="sale tooltip-test" data-original-title="">Hot</span>
+                                                                <h:form>
+                                                                    <h:commandLink action="#{productManaged.showProduct()}">
+                                                                        <f:param name="productID" value="#{newList.productID}" />
+                                                                        <img src="#{imagesPath}/#{newList.thumbImage}" style="width: 250px; height: 314px;" />
+                                                                    </h:commandLink>
+                                                                </h:form>
+                                                                <div class="caption">
+                                                                    <div class="price pull-left">
+                                                                        <span class="newprice">
+                                                                            <h:outputText value="#{newList.productPrice}">
+                                                                                <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                            </h:outputText>
+                                                                        </span>
+                                                                        <span class="newprice" style="color: #999; background-color: white; font-size: 14px">
+                                                                            #{newList.quantity}  product available
+                                                                        </span>
+                                                                    </div>
+                                                                    <h:form>
+                                                                        <c:if test="#{empty session.getAttribute('username')}">
+                                                                            <span class="cartadd addtocart pull-right tooltip-test" style="border:0;" />
+                                                                        </c:if>
+                                                                        <c:if test="#{not empty session.getAttribute('username')}">
+                                                                            <h:commandButton class="cartadd addtocart pull-right tooltip-test" style="border:0;" action="#{cartManaged.addCart(newList)}">
+                                                                            </h:commandButton>
+                                                                        </c:if>
+                                                                    </h:form>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

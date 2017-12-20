@@ -1,0 +1,118 @@
+package entities;
+
+import java.io.Serializable;
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@Entity
+@Table(name = "Category")
+@XmlRootElement
+public class Category implements Serializable {
+    @Column(name = "CategorySub")
+    private Short categorySub;
+    @Column(name = "Status")
+    private Short status;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CategoryID")
+    private Integer categoryID;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "CategoryName")
+    private String categoryName;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryID")
+    private Collection<Products> productsCollection;
+
+    public Category() {
+    }
+
+    public Category(Integer categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public Category(Integer categoryID, String categoryName) {
+        this.categoryID = categoryID;
+        this.categoryName = categoryName;
+    }
+
+    public Integer getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(Integer categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    @XmlTransient
+    public Collection<Products> getProductsCollection() {
+        return productsCollection;
+    }
+
+    public void setProductsCollection(Collection<Products> productsCollection) {
+        this.productsCollection = productsCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (categoryID != null ? categoryID.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Category)) {
+            return false;
+        }
+        Category other = (Category) object;
+        if ((this.categoryID == null && other.categoryID != null) || (this.categoryID != null && !this.categoryID.equals(other.categoryID))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return categoryName;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Short getCategorySub() {
+        return categorySub;
+    }
+
+    public void setCategorySub(Short categorySub) {
+        this.categorySub = categorySub;
+    }
+
+}

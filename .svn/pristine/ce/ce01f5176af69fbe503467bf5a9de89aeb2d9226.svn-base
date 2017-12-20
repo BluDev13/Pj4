@@ -1,0 +1,64 @@
+package manager;
+
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import model.ProductsFacade;
+
+@ManagedBean
+@SessionScoped
+public class FilterManaged {
+
+    @EJB
+    private ProductsFacade productsFacade;
+
+    private String cboPrice;
+    private String cboName;
+    private String priceFrom;
+    private String priceTo;
+    private String name;
+
+    public String getCboPrice() {
+        return cboPrice;
+    }
+
+    public void setCboPrice(String cboPrice) {
+        this.cboPrice = cboPrice;
+    }
+
+    public String getCboName() {
+        return cboName;
+    }
+
+    public void setCboName(String cboName) {
+        this.cboName = cboName;
+    }
+
+    public String getPriceFrom() {
+        return priceFrom;
+    }
+
+    public void setPriceFrom(String priceFrom) {
+        this.priceFrom = priceFrom;
+    }
+
+    public String getPriceTo() {
+        return priceTo;
+    }
+
+    public void setPriceTo(String priceTo) {
+        this.priceTo = priceTo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public FilterManaged() {
+    }
+
+}

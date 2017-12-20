@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:set var='newsDetail' value='#{userNewsManaged.newsDetail}' />
+                <c:choose> 
+                    <c:when test="${empty newsDetail}">
+                        #{facesContext.externalContext.redirect("404.xhtml")}
+                    </c:when>
+                    <c:otherwise>
+                        <div id="maincontainer">
+                            <div class="container">
+                                <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+                                    <a href="/" title="general.breadcrumbs.home_link_title">Home</a>
+                                    <span class="divider">/</span>
+                                    <a href="/" title="general.breadcrumbs.home_link_title">News</a>
+                                    <span class="divider">/</span>
+                                    <a href="/" title="">#{newsDetail.newsTitle}</a>
+                                </nav>
+                            </div>
+                            <section id="latest">
+                                <div class="container">
+                                    <div class="row">
+                                        <section id="latestblog" class="span9">
+                                            <h1 class="headingmain"><span>#{newsDetail.newsTitle}</span></h1>
+                                            <div class="caption span8">
+                                                <div class="body-content">
+                                                    <h:outputText value="#{newsDetail.newsContent}" escape="false" />
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <div class="span3">
+                                            <aside>
+                                                <div class="sidewidt">
+                                                    <h1 class="heading1"><span>New News</span></h1>
+                                                    <div class="news-latest list-group">
+                                                        <div class="article">
+                                                            <c:forEach items="#{userNewsManaged.findNew()}" var="row">
+                                                                <h:form>
+                                                                    <div class="post-content ">
+                                                                        <h4>
+                                                                            <h:commandLink action="#{userNewsManaged.showDetail()}" value="#{row.newsTitle}">
+                                                                                <f:param name="newsDetailID" value="#{row.newsID}" />
+                                                                            </h:commandLink>
+                                                                        </h4>
+                                                                        <img src="#{newsImagesPath}/#{row.newsImage}" />
+                                                                    </div>
+                                                                </h:form>
+                                                                <hr/>
+                                                            </c:forEach>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </aside>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

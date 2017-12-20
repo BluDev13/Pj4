@@ -1,0 +1,91 @@
+package model;
+
+import entities.Products;
+import java.util.List;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Root;
+
+@Stateless
+public class SearchFacade extends AbstractFacade<Products> {
+
+    @PersistenceContext(unitName = "Project_Team4PU")
+    private EntityManager em;
+
+    public SearchFacade() {
+        super(Products.class);
+    }
+
+    public SearchFacade(Class<Products> entityClass) {
+        super(entityClass);
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public List<Products> searchProduct(String searchType, String searchValue, int[] range) {
+        CriteriaBuilder cb;
+        javax.persistence.criteria.CriteriaQuery cq;
+        Root c;
+        Query q;
+        if (searchType == null) {
+            searchType = "name";
+        }
+        if (searchValue == null) {
+            searchValue = "";
+        }
+        switch (searchType) {
+            case "name":
+                cb = getEntityManager().getCriteriaBuilder();
+                cq = cb.createQuery();
+                c = cq.from(Products.class);
+                cq.select(c);
+                cq.orderBy(getEntityManager().getCriteriaBuilder().desc(c.get("productID")));
+                cq.where(cb.like(c.get("productName"), "%" + searchValue + "%"));
+                q = getEntityManager().createQuery(cq);
+                q.setMaxResults(range[1] - range[0] + 1);
+                q.setFirstResult(range[0]);
+                return q.getResultList();
+            case "category":
+                Query query = getEntityManager().createQuery("SELECT a FROM Products a WHERE a.categoryID.categoryID IN (SELECT b.categoryID FROM Category b WHERE b.categoryName LIKE :search)");
+                query.setParameter("search", "%" + searchValue + "%");
+                return query.getResultList();
+            case "brand":
+                query = getEntityManager().createQuery("SELECT a FROM Products a WHERE a.brandID.brandID IN (SELECT b.brandID FROM Brands b WHERE b.brandName LIKE :search)");
+                query.setParameter("search", "%" + searchValue + "%");
+                return query.getResultList();
+            case "price":
+                int price;
+                try {
+                    cb = getEntityManager().getCriteriaBuilder();
+                    cq = cb.createQuery();
+                    c = cq.from(Products.class);
+                    cq.select(c);
+                    cq.orderBy(getEntityManager().getCriteriaBuilder().desc(c.get("productID")));
+                    price = Integer.parseInt(searchValue);
+                    cq.where(cb.lt(c.get("productPrice"), (price + 500000)),
+                            cb.gt(c.get("productPrice"), (price - 500000)));
+                    q = getEntityManager().createQuery(cq);
+                    q.setMaxResults(range[1] - range[0] + 1);
+                    q.setFirstResult(range[0]);
+                    return q.getResultList();
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            default:
+                break;
+        }
+        return null;
+    }
+    
+    @PreDestroy
+    public void destroy() {
+        em.close();
+    }
+}

@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <c:choose>
+                    <c:when test="#{empty session.getAttribute('username')}">
+                        #{facesContext.externalContext.redirect("index.xhtml")}
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="userProfile" value="#{customerManaged.findUserByName(session.getAttribute('username'))}" />
+                        <div id="maincontainer">
+                            <div class="container">
+                                <h1 class="headingmain"><span>Account information</span></h1>
+                                <h:form style="float: right">
+                                    <h:commandLink class="logout" action="#{customerManaged.preUpdate(userProfile.customerID)}">[ Change information ] | </h:commandLink>
+                                    <h:commandLink class="logout" action="#{changePassManaged.preUpdate(userProfile.customerID)}">[ Change password ] | </h:commandLink>
+                                    <h:commandLink class="logout" action="#{customerManaged.logout()}">[ Sign out ]</h:commandLink>
+                                </h:form>
+                                <div id="login">
+                                    <section class="returncustomer" style="width: 96%">
+                                        <div class="form-vertical">
+                                            <fieldset>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 80px; font-weight: bold">Username :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{userProfile.username}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 80px; font-weight: bold">Full name :</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{userProfile.customerName}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 80px; font-weight: bold">Address:</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{userProfile.customerAddress}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 80px; font-weight: bold">Email:</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{userProfile.customerEmail}
+                                                    </span>
+                                                </div>
+                                                <div class="control-group">
+                                                    <span class="control-label" style="display:inline-block; margin-right: 60px; width: 80px; font-weight: bold">Phone:</span>
+                                                    <span class="controls" style="font-size: 16px;">
+                                                        #{userProfile.customerPhone}
+                                                    </span>
+                                                </div>
+                                                
+                                            </fieldset>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div style="clear: both"></div>
+                                <br/>
+
+                                <h1 class="headingmain"><span>Transaction history</span></h1>
+                                <div id="customer_orders" class="col-xs-12">
+                                    <table class="table table-striped table-bordered">
+                                        <tr>
+                                            <th class="image">Order code</th>
+                                            <th class="name">Date</th>
+                                            <th class="quantity">Payment method</th>
+                                            <th class="total">Subtotal</th>
+                                        </tr>
+                                        <c:forEach items="#{orderManaged.getListByUserID(userProfile)}" var="item">
+                                            <tr>
+                                                <td class="image">#100000000#{item.orderID}</td>
+                                                <td class="name">
+                                                    <span>
+                                                        <h:outputText value="#{item.orderDate}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                                        </h:outputText>
+                                                    </span>
+                                                </td>
+                                                <td class="price">
+                                                    <span class="status_not fulfilled">
+                                                        <c:choose>
+                                                            <c:when test="${(empty item.orderName) and (empty item.orderAddress) and (empty item.orderMobile)}">
+                                                                Pay with Credit Card
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Pay at home
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                </td>
+                                                <td class="total">
+                                                    <span class="total money">
+                                                        <c:set var="totalPrice" value="0" />
+                                                        <c:forEach items="#{item.orderDetailsCollection}" var="itemDetail">
+                                                            <c:set var="totalPrice" value="#{totalPrice + itemDetail.productID.productPrice * itemDetail.quantity}" />
+                                                        </c:forEach>
+                                                        <h:outputText value="#{totalPrice}">
+                                                            <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                        </h:outputText>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

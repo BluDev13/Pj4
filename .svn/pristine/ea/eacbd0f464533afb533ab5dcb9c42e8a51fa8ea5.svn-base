@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div id="maincontainer">
+                    <div class="container">
+                        <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+                            <a href="/" title="general.breadcrumbs.home_link_title">Trang chủ</a>
+                            <span class="divider">/</span>
+                            <a href="" title="">Tìm Kiếm</a>
+                        </nav>
+                    </div>
+                    <section id="latest">
+                        <div class="container">
+                            <div class="row">
+                                <div class="span12">
+                                    <h1 class="headingfull"><span>Tìm kiếm #{searchManaged.searchValue}</span></h1>
+                                    <ul class="thumbnails">
+                                        <ul class="products">
+                                            <c:choose> 
+                                                <c:when test="${empty searchManaged.items}">
+                                                    Không tìm thấy sản phẩm phù hợp
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:forEach items="#{searchManaged.items}" var="newList">
+                                                        <li class="span3">
+                                                            <a class="prdocutname" href="ViewProduct.xhtml?id=#{newList.productID}">#{newList.productName}</a>
+                                                            <div class="thumbnail">
+                                                                <span class="sale tooltip-test" data-original-title="">Hot</span>
+                                                                <h:form>
+                                                                    <h:commandLink action="#{productManaged.showProduct()}">
+                                                                        <f:param name="productID" value="#{newList.productID}" />
+                                                                        <img src="#{imagesPath}/#{newList.thumbImage}" style="width: 250px; height: 314px;" />
+                                                                    </h:commandLink>
+                                                                </h:form>
+                                                                <div class="caption">
+                                                                    <div class="price pull-left">
+                                                                        <span class="newprice">
+                                                                            <h:outputText value="#{newList.productPrice}">
+                                                                                <f:convertNumber pattern="###,###₫" currencySymbol="₫" type="currency"/>
+                                                                            </h:outputText>
+                                                                        </span>
+                                                                        <span class="newprice" style="color: #999; background-color: white; font-size: 14px">
+                                                                            Còn #{newList.quantity} sản phẩm
+                                                                        </span>
+                                                                    </div>
+                                                                    <h:form>
+                                                                        <c:if test="#{empty session.getAttribute('username')}">
+                                                                            <span class="cartadd addtocart pull-right tooltip-test" style="border:0;" />
+                                                                        </c:if>
+                                                                        <c:if test="#{not empty session.getAttribute('username')}">
+                                                                            <h:commandButton class="cartadd addtocart pull-right tooltip-test" style="border:0;" action="#{cartManaged.addCart(newList)}">
+                                                                            </h:commandButton>
+                                                                        </c:if>
+                                                                    </h:form>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </c:forEach>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </ul>
+                                    </ul>
+                                    <h:form rendered="#{not empty searchManaged.items}">
+                                        <h:outputText value="#{searchManaged.pagination.pageLastItem + 1} Product / #{searchManaged.pagination.itemsCount} Product"/>&nbsp;
+                                        <h:commandLink value="Prev" action="#{searchManaged.previous()}" rendered="#{searchManaged.pagination.hasPreviousPage}">
+                                        </h:commandLink>
+                                        &nbsp;
+                                        <h:commandLink value="Next" action="#{searchManaged.next()}" rendered="#{searchManaged.pagination.hasNextPage}">
+                                        </h:commandLink>
+                                        &nbsp;
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

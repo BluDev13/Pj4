@@ -1,0 +1,45 @@
+package model;
+
+import entities.Comments;
+import java.util.List;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Root;
+
+@Stateless
+public class CommentsFacade extends AbstractFacade<Comments> {
+
+    @PersistenceContext(unitName = "Project_Team4PU")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public CommentsFacade() {
+        super(Comments.class);
+    }
+
+    public List<Comments> findOnProduct(int id) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();
+        Root c = cq.from(Comments.class);
+        cq.select(c);
+        cq.where(
+                cb.equal(c.get("productID").get("productID"), id),
+                cb.equal(c.get("status"), 1)
+        );
+        Query q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        em.close();
+    }
+}

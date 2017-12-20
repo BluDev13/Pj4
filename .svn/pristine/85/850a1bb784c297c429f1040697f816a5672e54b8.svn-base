@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Add Category Page</title>
+    </h:head>
+    <h:body>     
+
+        <ui:composition template="/admin_template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div class="content">
+                    <div class="breadLine">
+                        <h:form>
+                            <ul class="buttons">
+                                <li>
+                                    <h:commandLink action="#{customerManaged.logout()}">
+                                        <span class="icon-search"></span>
+                                        <span class="text">Log out</span>
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                    <div class="workplace">
+                        <div class="page-header">
+                            <h1>Add Category</h1>
+                        </div>  
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="head clearfix">
+                                    <div class="isw-documents"></div>
+                                    <h1>Add Category</h1>
+                                </div>
+                                <c:if test="#{categoryAdminManaged.category.categoryName != null}">
+                                    #{categoryAdminManaged.newCategory()}
+                                </c:if>
+                                <div class="block-fluid">
+                                    <h:form id="addCategory">                      
+                                        <div class="row-form clearfix">
+                                            <div class="span3">Category Name :</div>
+                                            <div class="span8">
+                                                <h:inputText id="name" value="#{categoryAdminManaged.category.categoryName}" required="true" requiredMessage="Category name can not be empty" >
+                                                    <f:validateLength minimum="3" maximum="100" />
+                                                </h:inputText>
+                                                <h:messages for="name" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row-form clearfix">
+                                            <div class="span3" align="left">Category Sub:</div>
+                                            <div class="span8">
+                                                <h:selectOneMenu value="#{categoryAdminManaged.category.categorySub}">
+                                                    <c:forEach items="${categoryManaged.list}" var="items">
+                                                        <c:if test="${items.categorySub==null}">
+                                                            <f:selectItem itemValue="${items.categoryID}" itemLabel="${items}"/>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                    <f:selectItem itemValue="" itemLabel="Category Root"/>
+                                                </h:selectOneMenu>                                              
+                                            </div>
+                                        </div>
+                                        <div class="footer tar">
+                                            <h:commandButton value="Add New Category" class="btn" action="#{categoryAdminManaged.addCategory()}" />
+                                            <a href="ListChuyenMuc.xhtml">
+                                                <button type="button" class="btn">Back</button>
+                                            </a>
+                                        </div>
+                                    </h:form>
+                                </div>
+                                <div class="dr">
+                                    <span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

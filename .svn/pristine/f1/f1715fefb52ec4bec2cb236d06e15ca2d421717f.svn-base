@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/myTemplate.xhtml">
+            <ui:define name="content">
+                <div id="maincontainer">
+
+                    <section id="contactus">
+                        <div class="container">
+                            <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+                                <a href="/" title="general.breadcrumbs.home_link_title">Home page</a>
+                                <span class="divider">/</span>
+                                <span class="active">Contact</span>
+                            </nav>
+                            <h1 class="headingmain"><span>Contact with us</span></h1>
+                            <div class="row">
+                                <div class="span9">
+                                    <h:form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="control-group">
+                                                <label for="name" class="control-label">Your name <span class="required">*</span></label>
+                                                <div class="controls">
+                                                    <h:inputText value="#{contactManaged.contact.contactName}" required="true" requiredMessage="Please input your name !" id="name">
+                                                        <f:validateLength minimum="3" />
+                                                    </h:inputText>
+                                                    <h:messages for="name" />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label for="email" class="control-label">Email <span class="required">*</span></label>
+                                                <div class="controls">
+                                                    <h:inputText value="#{contactManaged.contact.contactMail}" required="true" requiredMessage="Please input your email !" id="mail">
+                                                        <f:validateLength minimum="3" />
+                                                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                    </h:inputText>
+                                                    <h:messages for="mail" />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label for="message" class="control-label">Content</label>
+                                                <div class="controls">
+                                                    <h:inputTextarea id="detail" rows="6" cols="40" value="#{contactManaged.contact.contactDetails}" required="true" requiredMessage="Please input content !">
+                                                        <f:validateLength minimum="10" />
+                                                    </h:inputTextarea>
+                                                    <h:messages for="detail" />
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <h:commandButton class="btn" value="Send contact" action="#{contactManaged.addContact()}" />
+                                                <input class="btn" type="reset" value="Cancel" />
+                                            </div>
+                                        </fieldset>
+                                    </h:form>
+                                </div>
+                                <div class="span3">
+                                    <aside>
+                                        <div class="sidewidt">
+                                            <h1 class="heading1"><span>Contact info</span></h1>
+                                            <p> FAT 2<br />
+                                                590 Cach Mang Thang Tam street<br />
+                                                District 3<br /> Ho Chi Minh city
+                                                <br />
+                                                Phone: 1900.101.101<br />
+                                                Mobile: 0909.246.357<br />
+                                                Email: group1_fat2@gmail.com<br />
+                                            </p>
+                                        </div>
+                                    </aside>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

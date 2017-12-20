@@ -1,0 +1,63 @@
+package admin.manager;
+
+import entities.Category;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import manager.SessionManaged;
+import model.CategoryFacade;
+
+@ManagedBean(name = "categoryAdminManaged")
+@RequestScoped
+public class CategoryManaged {
+
+    @EJB
+    private CategoryFacade categoryFacade;
+    private Category category;
+
+    public CategoryManaged() {
+        if (category == null) {
+            category = new Category();
+        }
+    }
+
+    public Category getCategory() {
+        return category;
+    } 
+    
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String addCategory() {    
+        categoryFacade.create(category);
+        SessionManaged.getRequest().setAttribute("message", "Thành công");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Thêm danh mục mới thành công");
+        return "ListChuyenMuc";
+    }
+    
+    public String preUpdate(int id){
+        category = categoryFacade.find(id);
+        return "EditChuyenMuc";
+    }
+    
+    public String updateCategory() {
+        categoryFacade.edit(category);
+        SessionManaged.getRequest().setAttribute("message", "Thành công");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Chỉnh sửa thông tin thành công");
+        return "ListChuyenMuc";
+    }
+    
+    public String deleteCategory(Category cate){
+        categoryFacade.remove(cate);
+        SessionManaged.getRequest().setAttribute("message", "Thành công");
+        SessionManaged.getRequest().setAttribute("messageDetails", "Xóa danh mục thành công");
+        return "ListChuyenMuc";
+    }
+    
+    public String details(int id){
+        category = categoryFacade.find(id);
+        return "ChiTietDanhMuc";
+    }
+}

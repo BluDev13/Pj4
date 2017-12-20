@@ -1,0 +1,50 @@
+package model;
+
+import entities.Category;
+import entities.Products;
+import java.util.List;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Root;
+
+@Stateless
+public class CategoryFacade extends AbstractFacade<Category> {
+    @PersistenceContext(unitName = "Project_Team4PU")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public CategoryFacade() {
+        super(Category.class);
+    }
+    
+    
+    public String getNameByID(int id){
+        return find(id).getCategoryName();
+    }
+
+    public List<Products> findPaging(int categoryID, int[] range) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();
+        Root c = cq.from(Products.class);
+        cq.select(c);
+        cq.where(cb.equal(c.get("categoryID").get("categoryID"), categoryID)
+        );
+        Query q = getEntityManager().createQuery(cq);
+        q.setMaxResults(range[1] - range[0] + 1);
+        q.setFirstResult(range[0]);
+        return q.getResultList();
+    }
+     
+    @PreDestroy
+    public void destroy(){
+        em.close();
+    }
+}

@@ -1,0 +1,23 @@
+
+package model;
+
+import entities.NewsCate;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Stateless
+public class NewsCateFacade extends AbstractFacade<NewsCate> {
+    @PersistenceContext(unitName = "Project_Team4PU")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public NewsCateFacade() {
+        super(NewsCate.class);
+    }
+    
+}

@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Admin Manager</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <div class="header">
+                <a class="logo" href="#{root}">
+                    <img src="#{resources}/img/logo.png" alt="Admin Panel" title="Admin Panel" style="height: 30px; width: 120px" />
+                </a>
+                <ul class="header_menu">
+                    <li class="list_icon">
+                        <a href="#">&nbsp;</a>
+                    </li>
+                </ul>    
+            </div>
+
+            <div class="menu">                
+
+                <div class="breadLine">            
+                    <div class="arrow"></div>
+                    <div class="adminControl active">
+                        Hi, #{session.getAttribute("adminuser")}
+                    </div>
+                </div>
+
+                <div class="admin">
+                    <div class="image">
+                        <img src="#{resources}/img/users/admin.png" class="img-polaroid"/>                
+                    </div>
+                    <h:form>
+                        <ul class="control">                
+                            <li>
+                                <span class="icon-comment"></span> 
+                                <a href="">#{session.getAttribute("adminuser")}</a>
+                            </li>
+                            <li>
+                                <span class="icon-cog"></span> 
+                                <h:commandLink action="#{changePassAdmin.preUpdate(session.getAttribute('adminuser'))}" value="Change Password" />
+                            </li>
+                            <li>
+                                <span class="icon-share-alt"></span> 
+                                <h:commandLink action="#{customerManaged.logout()}" value="Log out" />
+                            </li>
+                        </ul>
+                    </h:form>
+                    <div class="info">
+                        <span>Welcome Back !!!</span>
+                    </div>
+                </div>
+
+                <ul class="navigation">            
+                    <li class="active">
+                        <a href="#{root}">
+                            <span class="isw-grid"></span>
+                            <span class="text">Home page</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ListChuyenMuc.xhtml">
+                            <span class="isw-list"></span>
+                            <span class="text">Product Category management</span>
+                        </a>               
+                    </li>          
+                    <li>
+                        <a href="ListNhanHieu.xhtml">
+                            <span class="isw-archive"></span>
+                            <span class="text">Brand management</span>                 
+                        </a>
+                    </li>                      
+                    <li>
+                        <a href="ListChuyenMucTinTuc.xhtml">
+                            <span class="isw-user"></span>
+                            <span class="text">News Category management</span>
+                        </a>   
+                    </li>
+                    <li>
+                        <a href="ListTinTuc.xhtml">
+                            <span class="isw-calc"></span>
+                            <span class="text">News management</span>
+                        </a>   
+                    </li>
+                    <li class="openable">
+                        <a href="#">
+                            <span class="isw-user"></span>
+                            <span class="text">Customer management</span>                    
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="ListAdmin.xhtml">
+                                    <span class="icon-lock"></span>
+                                    <span class="text">Admin List</span>
+                                </a>   
+                            </li>
+                            <li>
+                                <a href="ListThanhVien.xhtml">
+                                    <span class="icon-user"></span>
+                                    <span class="text">Customer List</span>
+                                </a>   
+                            </li>
+                            <li>
+                                <a href="ListKhachHangTiemNang.xhtml">
+                                    <span class="icon-heart"></span>
+                                    <span class="text">Potential customers</span>
+                                </a>
+                            </li>                   
+                        </ul>
+                    </li> 
+                    <li class="openable">
+                        <a href="#">
+                            <span class="isw-chat"></span>
+                            <span class="text">Feedback management</span>                    
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="ListLienHe.xhtml">
+                                    <span class="icon-picture"></span>
+                                    <span class="text">List Feedback</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="ListBinhLuan.xhtml">
+                                    <span class="icon-pencil"></span>
+                                    <span class="text">Comment management</span>
+                                </a>
+                            </li>                   
+                        </ul>
+                    </li> 
+                    <li class="openable">
+                        <a href="#">
+                            <span class="isw-bookmark"></span>
+                            <span class="text">Product management</span>                    
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="ListSanPham.xhtml">
+                                    <span class="icon-list"></span>
+                                    <span class="text">List Product</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="MonthlyBestSelling.xhtml">
+                                    <span class="icon-calendar"></span>
+                                    <span class="text">Monthly Best Selling</span>
+                                </a>
+                            </li>  
+                            <li>
+                                <a href="ProductSoldOut.xhtml">
+                                    <span class="icon-off"></span>
+                                    <span class="text">Product Sold Out</span>
+                                </a>
+                            </li>                   
+                        </ul>
+                    </li> 
+                    <li>
+                        <a href="ListHoaDon.xhtml">
+                            <span class="isw-text_document"></span>
+                            <span class="text">Invoice management</span>
+                        </a>
+                    </li> 			
+                    <li class="openable">
+                        <a href="#">
+                            <span class="isw-graph"></span>
+                            <span class="text">Statistic</span>                    
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="report/CategoryPercent.xhtml">
+                                    <span class="icon-star-empty"></span>
+                                    <span class="text">Report Order Category</span>
+                                </a>
+                            </li> 
+                            <li>
+                                <a href="report/OrderInMonth.xhtml">
+                                    <span class="icon-star-empty"></span>
+                                    <span class="text">Report Order</span>
+                                </a>
+                            </li> 
+                            <li>
+                                <a href="ListBanChay.xhtml">
+                                    <span class="icon-star-empty"></span>
+                                    <span class="text">Best selling</span>
+                                </a>
+                            </li>  
+                            <li>
+                                <a href="MonthlyBestSelling.xhtml">
+                                    <span class="icon-calendar"></span>
+                                    <span class="text">Month Best Selling</span>
+                                </a>
+                            </li>  
+                            <li>
+                                <a href="ListKhachHangTiemNang.xhtml">
+                                    <span class="icon-user"></span>
+                                    <span class="text">Potential customers</span>
+                                </a>
+                            </li>  
+                            <li>
+                                <a href="SystemStatitics.xhtml">
+                                    <span class="icon-list"></span>
+                                    <span class="text">System Statitics</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>                                                                                                                 
+                </ul>
+
+                <div class="dr">
+                    <span></span>
+                </div>
+
+                <div class="widget-fluid">
+                    <div id="menuDatepicker"></div>
+                </div>
+
+                <div class="dr">
+                    <span></span>
+                </div>   
+            </div>
+        </ui:composition>
+    </h:body>
+</html>
+

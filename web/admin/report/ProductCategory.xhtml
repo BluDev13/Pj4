@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Product Category Report</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 5px;
+                text-align: left;
+            }
+            table#t01 {
+                width: 100%;    
+                background-color: #f1f1c1;
+            }
+        </style>
+
+    </h:head>
+    <h:body>
+        <h1 align="center">Product Category</h1>
+        Date : 
+        <h:outputText value="#{session.lastAccessedTime}">
+            <f:convertDateTime pattern="dd/MM/yyyy" />
+        </h:outputText>
+        <br /><br />
+
+        <table style="width:100%" class="table" id="example">
+            <tr>
+                <th>ID</th>
+                <th>Category Name</th>
+                <th>Product Count</th>
+                <th>Type</th>
+            </tr>
+            <c:forEach items="#{categoryManaged.list}" var="row">
+                <tr>
+                    <td>#{row.categoryID}</td>
+                    <td>#{row.categoryName}</td>		
+                    <td>
+                        <c:if test="#{row.categorySub!=null}">
+                            <p>#{row.productsCollection.size()}</p>
+                        </c:if>
+                        <c:if test="${row.categorySub==null}">
+                            #{categoryAdminManaged.productCount(row.categoryID)}
+                        </c:if>
+                    </td>
+                    <td>
+                        <c:if test="#{row.categorySub==null}">
+                            <p>Category</p>
+                        </c:if>
+                        <c:if test="#{row.categorySub>0}">
+                            <p>SubCategory</p>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        <br />
+        Total Number Of Product Category :  #{categoryManaged.list.size()}
+    </h:body>
+</html>
+
